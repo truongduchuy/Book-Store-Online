@@ -6,13 +6,19 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node app.js",
+    "dev": "nodemon -r ./config/dotenv app.js",
     "heroku-postbuild": "cd client && npm install && npm run build"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "dotenv-expand": "^5.1.0",
     "express": "^4.17.1",
-    "nodemon": "^2.0.2"
+    "mongoose": "^5.9.5",
+    "nodemon": "^2.0.2",
+    "validator": "^12.2.0"
   }
 }
