@@ -1,10 +1,10 @@
-import { combineReducers, createStore, applyMiddleware } from "redux";
-import { all } from "redux-saga/effects";
-import createSagaMiddleware from "redux-saga";
-import { preferenceReducer, preferenceSagas } from "./ducks";
+import { combineReducers, createStore, applyMiddleware } from 'redux';
+import { all } from 'redux-saga/effects';
+import createSagaMiddleware from 'redux-saga';
+import { preferenceReducer, preferenceSagas } from 'ducks';
 
 const rootReducer = combineReducers({
-  preference: preferenceReducer
+  preference: preferenceReducer,
 });
 
 export const rootSaga = function* rootSaga() {

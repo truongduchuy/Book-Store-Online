@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { USER_ADD_REQUEST, PREFERENCE_REQUEST } from '../../ducks';
+import { USER_ADD_REQUEST, PREFERENCE_REQUEST } from 'ducks';
 import { connect } from 'react-redux';
-import { createAction } from '../../dorothy/utils/redux';
+import { createAction } from 'dorothy/utils/redux';
 
 const Login = ({ dispatch, users }) => {
   useEffect(() => {
@@ -14,8 +14,6 @@ const Login = ({ dispatch, users }) => {
   const handleChange = (key, value) => {
     setUser({ ...user, [key]: value });
   };
-
-  console.log(process.env.REACT_APP_NAME);
 
   const handleSubmit = e => {
     e.preventDefault();

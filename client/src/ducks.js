@@ -1,6 +1,6 @@
 import { put, call, takeLatest, fork } from 'redux-saga/effects';
-import { callApi, createReducer, createAction } from './dorothy/utils';
-import { handleApiError } from './dorothy/utils/logger';
+import { callApi, createReducer, createAction } from 'dorothy/utils';
+import { handleApiError } from 'dorothy/utils/logger';
 
 /* preference state */
 export const PREFERENCE_REQUEST = 'PREFERENCE_REQUEST';
