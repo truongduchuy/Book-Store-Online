@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { USER_ADD_REQUEST, PREFERENCE_REQUEST } from 'ducks';
 import { connect } from 'react-redux';
 import { createAction } from 'dorothy/utils/redux';
+import Header from 'components/Header';
 
 const Login = ({ dispatch, users }) => {
   useEffect(() => {
@@ -22,6 +23,7 @@ const Login = ({ dispatch, users }) => {
 
   return (
     <div>
+      <Header />
       <h2>Test form</h2>
       <form onSubmit={handleSubmit}>
         <input
