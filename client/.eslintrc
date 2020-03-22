@@ -1,0 +1,38 @@
+{
+  "extends": ["airbnb", "prettier"],
+  "globals": {
+    "jest": true,
+    "document": true,
+    "module": true,
+    "process": true,
+    "window": true,
+    "fetch": true,
+    "navigator": true,
+    "jQuery": true,
+    "Shopify": true,
+    "ShopifyAnalytics": true
+  },
+  "rules": {
+    "linebreak-style": 0,
+    "object-curly-newline": 0,
+    "eslint linebreak-style": [0, "error", "windows"],
+    "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
+    "react/jsx-one-expression-per-line": 0,
+    "react/prop-types": 0,
+    "arrow-parens": 0,
+    "function-paren-newline": 0,
+    "no-confusing-arrow": 0,
+    "no-prototype-builtins": 0,
+    "implicit-arrow-linebreak": 0
+  },
+  "env": {
+    "jest": true
+  },
+  "settings": {
+    "import/resolver": {
+      "node": {
+        "paths": ["./src"]
+      }
+    }
+  }
+}
