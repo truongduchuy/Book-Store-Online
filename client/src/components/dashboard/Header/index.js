@@ -38,7 +38,7 @@ const HeaderContainer = styled.header`
         }
 
         &.active {
-          transform: scale(1.2);
+          transform: scale(1.4);
           font-weight: bold;
         }
       }
@@ -54,20 +54,20 @@ const HeaderContainer = styled.header`
 const Header = () => {
   const links = [
     {
-      url: '/',
+      url: '/dashboard/books',
       label: 'Books',
     },
     {
-      url: '/authors',
+      url: '/dashboard/authors',
       label: 'Authors',
     },
     {
-      url: '/genres',
+      url: '/dashboard/genres',
       label: 'Genres',
     },
     {
-      url: '/genres',
-      label: 'Genres',
+      url: '/dashboard/orders',
+      label: 'Orders',
     },
   ];
 
