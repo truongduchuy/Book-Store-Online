@@ -2,6 +2,7 @@ const express = require('express');
 const path = require('path');
 require('./db/mongoose');
 const userRouter = require('./routes/user');
+const genreRouter = require('./routes/genre');
 const cors = require('cors');
 
 const app = express();
@@ -16,6 +17,7 @@ app.get('/api/test', (req, res) => {
 });
 
 app.use('/api', userRouter);
+app.use('/api', genreRouter);
 
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static(path.join(__dirname, 'client', 'build')));

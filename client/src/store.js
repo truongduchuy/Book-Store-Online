@@ -1,14 +1,14 @@
 import { combineReducers, createStore, applyMiddleware } from 'redux';
 import { all } from 'redux-saga/effects';
 import createSagaMiddleware from 'redux-saga';
-import { preferenceReducer, preferenceSagas } from 'ducks';
+import { genreReducer, genreSagas } from 'components/dashboard/Genres/ducks';
 
 const rootReducer = combineReducers({
-  preference: preferenceReducer,
+  genre: genreReducer,
 });
 
 export const rootSaga = function* rootSaga() {
-  yield all([...preferenceSagas]);
+  yield all([...genreSagas]);
 };
 
 const sagaMiddleware = createSagaMiddleware();

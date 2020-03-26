@@ -32,6 +32,7 @@ const HeaderContainer = styled.header`
         margin-right: 10px;
         padding: 10px 20px;
         transition: 0.2s;
+        overflow: hidden;
 
         &:hover {
           opacity: 0.8;
@@ -76,7 +77,12 @@ const Header = () => {
       <div className="content">
         <div className="left-box">
           {links.map((item, index) => (
-            <NavLink key={index} exact={item.url === '/'} className="menu-item" to={item.url}>
+            <NavLink
+              key={index.toString()}
+              exact={item.url === '/'}
+              className="menu-item"
+              to={item.url}
+            >
               {item.label}
             </NavLink>
           ))}
