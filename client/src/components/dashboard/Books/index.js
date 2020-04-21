@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { Icon, Input } from 'antd'
-import Search from './Search'
+import { Icon, Input } from 'antd';
+import Search from './Search';
 
 const StyledHeader = styled.header`
   background: black;
 
   .header {
-
     &__upper {
       color: #fff;
       display: flex;
@@ -18,16 +17,18 @@ const StyledHeader = styled.header`
       .burger {
         display: none;
         cursor: pointer;
-        
+
         div {
           background-color: white;
           width: 20px;
           height: 2px;
           margin: 5px;
-          transition: all .3s;
+          transition: all 0.3s;
         }
 
-        ${({ isNavOn }) => isNavOn && `
+        ${({ isNavOn }) =>
+          isNavOn &&
+          `
         .line:nth-child(1) {
           transform: rotate(-45deg) translate(-6px, 4px);
         }
@@ -61,7 +62,7 @@ const StyledHeader = styled.header`
         > i:nth-child(2) {
           margin-left: 20px;
           position: relative;
-          
+
           &::after {
             content: '';
             height: 10px;
@@ -73,8 +74,6 @@ const StyledHeader = styled.header`
             right: -3px;
           }
         }
-
-
       }
     }
 
@@ -89,7 +88,7 @@ const StyledHeader = styled.header`
         li {
           display: inline-block;
           text-transform: uppercase;
-          
+
           a {
             padding: 20px;
             color: #fff;
@@ -111,14 +110,12 @@ const StyledHeader = styled.header`
             display: inline-block;
             padding-left: 20px;
           }
-          
         }
-
       }
     }
   }
 
-  @media screen and (max-width: 750px){
+  @media screen and (max-width: 750px) {
     .header {
       &__upper {
         padding: 15px 20px;
@@ -127,34 +124,36 @@ const StyledHeader = styled.header`
         }
 
         .cart {
-          >*:first-child {
+          > *:first-child {
             display: none;
           }
 
-          >i:nth-child(2) {
+          > i:nth-child(2) {
             font-size: 24px;
           }
         }
       }
 
       &__nav {
-      ${({ isNavOn }) => isNavOn ? `
+        ${({ isNavOn }) =>
+          isNavOn
+            ? `
         padding-left: 20px;
 
         ul {
           display: flex;
           flex-direction: column;
         }
-        ` : `display: none;`}
+        `
+            : `display: none;`}
       }
     }
   }
-
 `;
 
 const Books = () => {
-  const [isSearching, setSearching] = useState(false)
-  const [isNavOn, setNavOn] = useState(false)
+  const [isSearching, setSearching] = useState(false);
+  const [isNavOn, setNavOn] = useState(false);
 
   return (
     <>
@@ -165,13 +164,13 @@ const Books = () => {
             <div class="line"></div>
             <div class="line"></div>
           </div>
-          <a className="logo">
+          <a href="##" className="logo">
             BookShelf
           </a>
           <div className="cart">
             <Search
               isSearching={isSearching}
-              onSearch={value => console.log(value)}
+              onSearch={(value) => console.log(value)}
               setSearchOn={() => setSearching(true)}
               setSearchOff={() => setSearching(false)}
             />
@@ -189,7 +188,7 @@ const Books = () => {
             <li>
               <Input.Search
                 placeholder="search"
-                onSearch={value => console.log(value)}
+                onSearch={(value) => console.log(value)}
                 style={{ width: 200 }}
               />
             </li>
@@ -198,7 +197,7 @@ const Books = () => {
       </StyledHeader>
       <div style={{ height: '200vh' }}></div>
     </>
-  )
-}
+  );
+};
 
 export default Books;
