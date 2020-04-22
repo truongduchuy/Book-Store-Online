@@ -6,12 +6,14 @@ import Orders from 'components/dashboard/Orders';
 import Genres from 'components/dashboard/Genres';
 import Login from 'components/dashboard/Login';
 import Home from 'components/storefront/Home';
+import Shop from 'components/storefront/Shop';
 
 const App = () => {
   return (
     <BrowserRouter>
       <Switch>
         <Route exact path="/" component={Home} />
+        <Route exact path="/shop" component={Shop} />
         <Route exact path="/dashboard/login" component={Login} />
         <Route exact path="/dashboard/books" component={Books} />
         <Route exact path="/dashboard/authors" component={Authors} />

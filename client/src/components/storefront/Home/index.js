@@ -1,9 +1,9 @@
 import React from 'react';
 import Header from '../Header';
+import Footer from '../Footer';
 import BackgroundImage from './BackgroundImageSection';
 import Slider from './Slider';
 import About from './About';
-import Footer from './Footer';
 
 const Home = () => {
   return (

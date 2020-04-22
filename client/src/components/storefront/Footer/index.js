@@ -14,7 +14,7 @@ const Container = styled.section`
   .socials {
     margin-bottom: 20px;
 
-    img:not(:last-child) {
+    > a:not(:last-child) {
       margin-right: 20px;
     }
   }
@@ -24,9 +24,15 @@ const Footer = () => {
   return (
     <Container>
       <div className="socials">
-        <img src={FbIcon} alt="facebook" />
-        <img src={TwiterIcon} alt="twiter" />
-        <img src={InIcon} alt="instagram" />
+        <a href="###">
+          <img src={FbIcon} alt="facebook" />
+        </a>
+        <a href="###">
+          <img src={TwiterIcon} alt="twiter" />
+        </a>
+        <a href="###">
+          <img src={InIcon} alt="instagram" />
+        </a>
       </div>
       <p>With Paypal</p>
     </Container>

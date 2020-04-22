@@ -16,7 +16,7 @@ const StyledHeader = styled.header`
   .header {
     display: flex;
     justify-content: space-between;
-    padding: 30px 70px;
+    padding: 0 70px;
     align-items: center;
     box-shadow: 1px 2px 3px rgba(0, 0, 0, 0.4);
 
@@ -39,6 +39,17 @@ const StyledHeader = styled.header`
 
       li {
         align-self: center;
+
+        a {
+          padding: 30px 0;
+          display: inline-block;
+          text-transform: uppercase;
+          font-weight: 600;
+
+          &:hover {
+            color: #1890ff;
+          }
+        }
       }
 
       li:not(:last-child) {
@@ -137,30 +148,27 @@ const Books = () => {
           <div className="cart">
             <Cart quantity={2} />
           </div>
-          <a href="##" className="logo">
+          <a href="/" className="logo">
             Book Store
           </a>
           <div className="burger" onClick={() => setNavOn(!isNavOn)}>
-            <div class="line"></div>
-            <div class="line"></div>
-            <div class="line"></div>
+            <div className="line"></div>
+            <div className="line"></div>
+            <div className="line"></div>
           </div>
         </div>
         <ul className="header__nav">
           <li>
-            <NavLink to="###">Home</NavLink>
+            <NavLink to="/">Home</NavLink>
           </li>
           <li>
-            <a href="#about">About</a>
-          </li>
-          <li>
-            <NavLink to="###">Shop</NavLink>
+            <NavLink to="/shop">Shop</NavLink>
           </li>
           <li>
             <NavLink to="###">Sign Up</NavLink>
           </li>
           <li>
-            <NavLink to="###">Log in</NavLink>
+            <NavLink to="###">Sign In</NavLink>
           </li>
           <li>
             <div className="cart">

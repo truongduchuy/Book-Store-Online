@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import ReadingImg from './reading.jpg';
 
 const Container = styled.section`
-  height: 475px;
+  height: 544px;
   display: flex;
   background-color: #fff;
 
