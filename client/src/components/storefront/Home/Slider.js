@@ -11,7 +11,10 @@ const Container = styled.section`
 
   .item {
     background-color: white;
-    height: 200px;
+    height: auto;
+    padding: 20px;
+    font-weight: 600;
+    font-size: 16px;
 
     &:first-child {
       position: relative;
@@ -40,10 +43,11 @@ const Container = styled.section`
       }
 
       .image {
-        margin-bottom: 10px;
+        margin-bottom: 15px;
 
         img {
-          height: 120px;
+          height: 200px;
+          max-width: 100%;
         }
       }
     }
@@ -53,7 +57,7 @@ const Container = styled.section`
     left: -5px;
 
     &::after {
-      font-size: 20px;
+      font-size: 25px;
     }
   }
 
@@ -61,7 +65,7 @@ const Container = styled.section`
     right: -5px;
 
     &::after {
-      font-size: 20px;
+      font-size: 25px;
     }
   }
 
@@ -80,10 +84,10 @@ const Container = styled.section`
 
 const MutipleSlidesPerView = () => {
   const params = {
-    autoplay: {
-      delay: 2500,
-      disableOnInteraction: false,
-    },
+    // autoplay: {
+    //   delay: 1500,
+    //   disableOnInteraction: false,
+    // },
     navigation: {
       nextEl: '.swiper-button-next',
       prevEl: '.swiper-button-prev',
@@ -106,19 +110,14 @@ const MutipleSlidesPerView = () => {
         slidesPerView: 2,
         spaceBetween: 20,
       },
-      // when window width is >= 640px
-      640: {
-        slidesPerView: 3,
-        spaceBetween: 20,
-      },
       // when window width is >= 750px
       750: {
-        slidesPerView: 4,
+        slidesPerView: 3,
         spaceBetween: 10,
       },
-      // when window width is >= 750px
+      // when window width is >= 1024px
       1024: {
-        slidesPerView: 5,
+        slidesPerView: 4,
         spaceBetween: 30,
       },
     },
@@ -132,7 +131,7 @@ const MutipleSlidesPerView = () => {
               <div className="image">
                 <img src={item % 2 === 0 ? theStar : selfHelpImg} alt="book" />
               </div>
-              <p>Self-Help</p>
+              <p>The Star and the Shamrock</p>
             </a>
           </div>
         ))}

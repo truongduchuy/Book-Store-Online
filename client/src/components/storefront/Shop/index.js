@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
+import PaginationBox from 'antd-components/pagination';
 import Header from '../Header';
 import Footer from '../Footer';
 import BreadImg from './bread.jpg';
@@ -30,7 +31,7 @@ const StyledImage = styled.div`
 
 const StyledContent = styled.div`
   display: flex;
-  margin: 100px 0;
+  margin: 100px -20px;
   padding: 0 70px;
 
   .filter-box {
@@ -74,63 +75,107 @@ const StyledContent = styled.div`
 
   .books-box {
     flex-basis: 75%;
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
 
-    .wrapper {
-      padding: 0 20px;
-      flex-basis: 25%;
-      margin-bottom: 50px;
+    .books {
+      display: flex;
+      flex-wrap: wrap;
 
-      .item {
-        border: 1px solid #eee;
+      .wrapper {
+        padding: 0 20px;
+        flex-basis: 33.33%;
+        margin-bottom: 50px;
+        height: auto;
 
-        &__image-box {
-          > a {
-            display: flex;
-            justify-content: center;
+        .item {
+          border: 1px solid #eee;
 
-            > img {
-              height: 300px;
+          &__image-box {
+            position: relative;
+
+            &:hover .actions {
+              opacity: 1;
+
+              a {
+                transform: translate(-50%, -50%);
+              }
+            }
+
+            > a {
+              display: flex;
+              justify-content: center;
+
+              > img {
+                max-width: 100%;
+              }
+            }
+
+            .actions {
+              opacity: 0;
+              position: absolute;
+              top: 0;
+              left: 0;
+              right: 0;
+              bottom: 0;
+              background-color: rgba(0, 0, 0, 0.06);
+              transition: all 0.3s;
+
+              a {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%) translateY(80px);
+                transition: all 0.3s;
+                padding: 10px 15px;
+                background-color: #006eff;
+                color: #fff;
+
+                font-size: 0.8125em;
+                font-weight: 700;
+                letter-spacing: 0.15em;
+                text-transform: uppercase;
+                padding: 15px 45px;
+
+                &:hover {
+                  background-color: #0058cc;
+                }
+              }
             }
           }
-        }
 
-        &__content {
-          border-top: 1px solid #eee;
-          font-weight: 700;
-          font-size: 16px;
-          padding: 10px;
+          &__content {
+            border-top: 1px solid #eee;
+            font-weight: 700;
+            font-size: 16px;
+            padding: 10px;
+
+            p {
+              margin-top: 10px;
+            }
+          }
         }
       }
     }
   }
 
-  @media screen and (max-width: 1025px) {
-    flex-direction: column;
-  }
-
   @media screen and (max-width: 768px) {
-    .books-box {
-      img {
-        height: 250px !important;
+    flex-direction: column;
+    padding: 30px;
+
+    .books-box .books {
+      .wrapper {
+        flex-basis: 50%;
       }
     }
   }
 
   @media screen and (max-width: 480px) {
-    .books-box {
-      justify-content: center;
-
-      img {
-        height: 320px !important;
-      }
+    .books-box .books .wrapper {
+      flex-basis: 100%;
     }
   }
 `;
 
-const Home = () => {
+const Shop = () => {
   return (
     <>
       <Header />
@@ -163,22 +208,27 @@ const Home = () => {
             </div>
           </div>
           <div className="books-box">
-            {[1, 2, 3, 4, 5, 6, 7].map((item, index) => (
-              <div className="wrapper" key={index}>
-                <div className="item">
-                  <div className="item__image-box">
-                    <a href="###">
-                      <img src={jqueryImg} alt="img" />
-                    </a>
-                    <div className="actions"></div>
-                  </div>
-                  <div className="item__content">
-                    <a href="###">Book really cool</a>
-                    <p>35$</p>
+            <div className="books">
+              {[1, 2, 3, 4, 5, 6, 7].map((item, index) => (
+                <div className="wrapper" key={index}>
+                  <div className="item">
+                    <div className="item__image-box">
+                      <a href="###">
+                        <img src={jqueryImg} alt="img" />
+                      </a>
+                      <div className="actions">
+                        <a href="###">View</a>
+                      </div>
+                    </div>
+                    <div className="item__content">
+                      <a href="###">Eassy way to learn JQuery</a>
+                      <p>35$</p>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
+            <PaginationBox pageSize={3} total={15} onChange={(page) => console.log(page)} />
           </div>
         </StyledContent>
       </main>
@@ -187,4 +237,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default Shop;

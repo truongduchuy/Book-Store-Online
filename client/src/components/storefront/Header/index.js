@@ -76,7 +76,7 @@ const StyledHeader = styled.header`
           .line {
             width: 23px;
             height: 2px;
-            margin: 6px;
+            margin: 6px 0;
             background: black;
             transition: transform 0.3s;
 
