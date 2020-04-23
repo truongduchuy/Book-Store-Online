@@ -1,33 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
 import PaginationBox from 'antd-components/pagination';
+import { Link } from 'react-router-dom';
 import Header from '../Header';
 import Footer from '../Footer';
-import BreadImg from './bread.jpg';
-import jqueryImg from './jqueryBook.webp';
-
-const StyledImage = styled.div`
-  position: relative;
-
-  > div:nth-child(2) {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-
-    h1 {
-      font-size: 35px;
-    }
-
-    .bread-crumb {
-      text-align: center;
-      span {
-        margin: 0 10px;
-      }
-    }
-  }
-`;
+import jqueryImg from './alchemist.jpg';
+import BreadCrumb from '../BreadCrumb';
 
 const StyledContent = styled.div`
   display: flex;
@@ -103,6 +81,7 @@ const StyledContent = styled.div`
             > a {
               display: flex;
               justify-content: center;
+              padding: 20px 0;
 
               > img {
                 max-width: 100%;
@@ -180,17 +159,7 @@ const Shop = () => {
     <>
       <Header />
       <main>
-        <StyledImage>
-          <img src={BreadImg} alt="bread" />
-          <div className="heading">
-            <h1>Shop</h1>
-            <div className="bread-crumb">
-              <Link to="/">Home</Link>
-              <span>/</span>
-              Shop
-            </div>
-          </div>
-        </StyledImage>
+        <BreadCrumb pages={['Home', 'Shop']} />
         <StyledContent>
           <div className="filter-box">
             <div>
@@ -213,15 +182,15 @@ const Shop = () => {
                 <div className="wrapper" key={index}>
                   <div className="item">
                     <div className="item__image-box">
-                      <a href="###">
+                      <a href="/shop/Eassy way to learn JQuery">
                         <img src={jqueryImg} alt="img" />
                       </a>
                       <div className="actions">
-                        <a href="###">View</a>
+                        <Link to="/shop/The Alchemist">View</Link>
                       </div>
                     </div>
                     <div className="item__content">
-                      <a href="###">Eassy way to learn JQuery</a>
+                      <a href="/shop/The Alchemist">The Alchemist</a>
                       <p>35$</p>
                     </div>
                   </div>

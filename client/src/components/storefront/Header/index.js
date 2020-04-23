@@ -151,7 +151,7 @@ const Books = () => {
           <a href="/" className="logo">
             Book Store
           </a>
-          <div className="burger" onClick={() => setNavOn(!isNavOn)}>
+          <div className="burger" aria-hidden="true" onClick={() => setNavOn(!isNavOn)}>
             <div className="line"></div>
             <div className="line"></div>
             <div className="line"></div>

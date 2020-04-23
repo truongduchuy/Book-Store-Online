@@ -65,7 +65,11 @@ const Genres = ({ genreStore, dispatch }) => {
     dispatch(createAction(GENRES_REQUEST));
   }, [dispatch]);
 
-  const onSubmit = values => {
+  const handleCloseModal = () => {
+    setModalData({ isOpen: false, editingId: '' });
+  };
+
+  const onSubmit = (values) => {
     if (editingId !== '') {
       dispatch(createAction(GENRE_EDIT_REQUEST, { id: editingId, data: values }));
     } else {
@@ -74,7 +78,7 @@ const Genres = ({ genreStore, dispatch }) => {
     handleCloseModal();
   };
 
-  const genre = genres.find(genre => genre._id === editingId);
+  const genre = genres.find((genre) => genre._id === editingId);
 
   const renderForm = ({ handleSubmit, ...form }) => (
     <Form className="form">
@@ -132,10 +136,6 @@ const Genres = ({ genreStore, dispatch }) => {
     },
   ];
 
-  const handleCloseModal = () => {
-    setModalData({ isOpen: false, editingId: '' });
-  };
-
   return (
     <Container>
       <Modal
@@ -160,7 +160,7 @@ const Genres = ({ genreStore, dispatch }) => {
           <Search
             placeholder="search"
             style={{ width: '250px' }}
-            onSearch={value => dispatch(createAction(SEARCH_VALUE_CHANGE, value))}
+            onSearch={(value) => dispatch(createAction(SEARCH_VALUE_CHANGE, value))}
           />
         </div>
         <Button type="primary" onClick={() => setModalData({ isOpen: true, editingId: '' })}>
@@ -181,6 +181,6 @@ const Genres = ({ genreStore, dispatch }) => {
   );
 };
 
-export default connect(state => ({
+export default connect((state) => ({
   genreStore: state.genre,
 }))(withHeader(Genres));

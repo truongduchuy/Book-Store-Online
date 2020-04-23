@@ -11,7 +11,7 @@ const StyledSelect = styled(Select)`
 `;
 
 export default class extends Component {
-  _onChange = value => {
+  _onChange = (value) => {
     const { field, onChange, name } = this.props;
 
     if (onChange) onChange({ target: { value, name: (field && field.name) || name } });
