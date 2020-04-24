@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Input } from 'antd';
 import classNames from 'classnames';
 import styled from 'styled-components';
@@ -9,17 +9,14 @@ const StyledInput = styled(Input)`
 `;
 
 export default ({ field, form, modern, simple, value, className, ...props }) => {
-  const [input, setInput] = useState(null);
-
-  const handleChange = e => {
+  const handleChange = (e) => {
     field.onChange({ target: { value: e.target.value, name: field.name } });
-    setInput(e.target.value);
   };
 
   return (
     <StyledInput
       {...props}
-      value={input || value}
+      value={field?.value || value}
       onChange={handleChange}
       className={classNames(className, { modern, simple })}
     />

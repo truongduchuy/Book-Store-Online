@@ -165,10 +165,10 @@ const Books = () => {
             <NavLink to="/shop">Shop</NavLink>
           </li>
           <li>
-            <NavLink to="###">Sign Up</NavLink>
+            <NavLink to="/register">Register</NavLink>
           </li>
           <li>
-            <NavLink to="###">Sign In</NavLink>
+            <NavLink to="/login">Log In</NavLink>
           </li>
           <li>
             <div className="cart">
