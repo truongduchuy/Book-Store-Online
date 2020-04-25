@@ -2,12 +2,10 @@ import React from 'react';
 import styled from 'styled-components';
 import { Rate } from 'antd';
 import 'antd/es/rate/style/css';
-import Header from '../Header';
-import Footer from '../Footer';
-import BreadCrumb from '../BreadCrumb';
 import jqueryBook from './alchemist.jpg';
 import Reviews from './Reviews';
 import Button from '../Button';
+import Layout from '../Layout';
 
 const StyledContent = styled.div`
   .details {
@@ -39,18 +37,9 @@ const StyledContent = styled.div`
       flex-basis: 50%;
       margin-top: 20px;
 
-      > h3 {
-        font-size: 24px;
-        font-weight: 400;
-      }
-
       > .review {
         ul {
           margin-right: 15px;
-
-          li {
-            font-size: 16px;
-          }
         }
       }
 
@@ -98,43 +87,38 @@ const StyledContent = styled.div`
 const ProductDetails = ({ match }) => {
   console.log(match.params.name);
   return (
-    <>
-      <Header />
-      <main>
-        <BreadCrumb pages={['Home', 'Shop', match.params.name]} />
-        <StyledContent>
-          <div className="details">
-            <div className="details__image-box">
-              <div>
-                <img src={jqueryBook} alt="img" />
-              </div>
-            </div>
-            <div className="details__image-content">
-              <h3>{match.params.name}</h3>
-              <div className="review">
-                <Rate allowHalf defaultValue={4.5} disabled />
-                <span>1 review</span>
-              </div>
-              <p>35$</p>
-              <p>
-                Every few decades a book is published that changes the lives of its readers forever.
-                This is such a book - a magical fable about learning to listen to your heart, read
-                the omens strewn along life’s path and, above, all follow your dreams.
-              </p>
-              <div className="actions">
-                <p>quantity:</p>
-                <span>-</span>
-                <span>1</span>
-                <span>+</span>
-              </div>
-              <Button label="Add to cart" />
+    <Layout pages={['Home', 'Shop', match.params.name]}>
+      <StyledContent>
+        <div className="details">
+          <div className="details__image-box">
+            <div>
+              <img src={jqueryBook} alt="img" />
             </div>
           </div>
-          <Reviews />
-        </StyledContent>
-      </main>
-      <Footer />
-    </>
+          <div className="details__image-content">
+            <h2>{match.params.name}</h2>
+            <div className="review">
+              <Rate allowHalf defaultValue={4.5} disabled />
+              <span>1 review</span>
+            </div>
+            <p>35$</p>
+            <p>
+              Every few decades a book is published that changes the lives of its readers forever.
+              This is such a book - a magical fable about learning to listen to your heart, read the
+              omens strewn along life’s path and, above, all follow your dreams.
+            </p>
+            <div className="actions">
+              <p>quantity:</p>
+              <span>-</span>
+              <span>1</span>
+              <span>+</span>
+            </div>
+            <Button label="Add to cart" />
+          </div>
+        </div>
+        <Reviews />
+      </StyledContent>
+    </Layout>
   );
 };
 

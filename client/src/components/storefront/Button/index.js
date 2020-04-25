@@ -22,8 +22,8 @@ const StyledButton = styled.button`
   }
 `;
 
-export default ({ label, padding, lowercase, restProps }) => (
+export default ({ label, padding, lowercase, children, ...restProps }) => (
   <StyledButton {...restProps} lowercase={lowercase} padding={padding}>
-    {label}
+    {children || label}
   </StyledButton>
 );

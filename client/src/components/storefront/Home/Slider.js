@@ -14,7 +14,6 @@ const Container = styled.section`
     height: auto;
     padding: 20px;
     font-weight: 600;
-    font-size: 16px;
 
     &:first-child {
       position: relative;
@@ -93,12 +92,6 @@ const MutipleSlidesPerView = () => {
       prevEl: '.swiper-button-prev',
     },
     loop: true,
-    // grabCursor: true,
-    // pagination: {
-    //   el: '.swiper-pagination',
-    //   clickable: true,
-    //   // dynamicBullets: true,
-    // },
     breakpoints: {
       // when window width is >= 320px
       320: {
@@ -125,7 +118,7 @@ const MutipleSlidesPerView = () => {
   return (
     <Container>
       <Swiper {...params}>
-        {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((item) => (
+        {[1, 2, 3, 4, 5, 6, 7, 8, 9].map(item => (
           <div className="item">
             <a href="###">
               <div className="image">

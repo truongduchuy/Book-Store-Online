@@ -11,6 +11,7 @@ import Login from 'components/storefront/Login';
 import Register from 'components/storefront/Register';
 import ProductDetails from 'components/storefront/ProductDetails';
 import ScrollToTop from './components/storefront/ScrollToTop';
+import Cart from './components/storefront/Cart';
 
 const App = () => {
   return (
@@ -21,6 +22,7 @@ const App = () => {
         <Route exact path="/login" component={Login} />
         <Route exact path="/register" component={Register} />
         <Route exact path="/shop" component={Shop} />
+        <Route exact path="/shop/cart" component={Cart} />
         <Route exact path="/shop/:name" component={ProductDetails} />
         <Route exact path="/dashboard/login" component={DashBoardLogin} />
         <Route exact path="/dashboard/books" component={Books} />

@@ -31,6 +31,7 @@ const StyledHeader = styled.header`
       .burger {
         display: none;
       }
+
     }
 
     &__nav {
@@ -68,11 +69,12 @@ const StyledHeader = styled.header`
 
         > .cart,
         .burger {
-          cursor: pointer;
           display: block;
         }
-
+        
         .burger {
+          cursor: pointer;
+
           .line {
             width: 23px;
             height: 2px;
@@ -94,10 +96,6 @@ const StyledHeader = styled.header`
               }
             `}
           }
-        }
-
-        .cart i {
-          font-size: 26px;
         }
       }
 
@@ -146,11 +144,11 @@ const Books = () => {
       <div className="header">
         <div className="header__logo">
           <div className="cart">
-            <Cart quantity={2} />
+            <Cart quantity={0} />
           </div>
-          <a href="/" className="logo">
+          <NavLink to="/" className="logo">
             Book Store
-          </a>
+          </NavLink>
           <div className="burger" aria-hidden="true" onClick={() => setNavOn(!isNavOn)}>
             <div className="line"></div>
             <div className="line"></div>
@@ -172,7 +170,7 @@ const Books = () => {
           </li>
           <li>
             <div className="cart">
-              <Cart quantity={2} />
+              <Cart quantity={0} />
             </div>
           </li>
         </ul>

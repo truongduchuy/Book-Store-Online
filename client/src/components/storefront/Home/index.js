@@ -1,21 +1,16 @@
 import React from 'react';
-import Header from '../Header';
-import Footer from '../Footer';
-import BackgroundImage from './BackgroundImageSection';
 import Slider from './Slider';
 import About from './About';
+import BackgroundImage from './BackgroundImageSection';
+import Layout from '../Layout';
 
 const Home = () => {
   return (
-    <>
-      <Header />
-      <main>
-        <BackgroundImage />
-        <Slider />
-        <About />
-      </main>
-      <Footer />
-    </>
+    <Layout>
+      <BackgroundImage />
+      <Slider />
+      <About />
+    </Layout>
   );
 };
 

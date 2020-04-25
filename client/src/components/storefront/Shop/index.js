@@ -2,10 +2,8 @@ import React from 'react';
 import styled from 'styled-components';
 import PaginationBox from 'antd-components/pagination';
 import { Link } from 'react-router-dom';
-import Header from '../Header';
-import Footer from '../Footer';
 import jqueryImg from './alchemist.jpg';
-import BreadCrumb from '../BreadCrumb';
+import Layout from '../Layout';
 
 const StyledContent = styled.div`
   display: flex;
@@ -124,7 +122,6 @@ const StyledContent = styled.div`
           &__content {
             border-top: 1px solid #eee;
             font-weight: 700;
-            font-size: 16px;
             padding: 10px;
 
             p {
@@ -156,53 +153,48 @@ const StyledContent = styled.div`
 
 const Shop = () => {
   return (
-    <>
-      <Header />
-      <main>
-        <BreadCrumb pages={['Home', 'Shop']} />
-        <StyledContent>
-          <div className="filter-box">
-            <div>
-              <h2>Search</h2>
-              <input type="text" placeholder="Search books" />
-            </div>
-            <div>
-              <h2>Categories</h2>
-              <ul>
-                <li>Biography</li>
-                <li>Adventure</li>
-                <li>Children</li>
-                <li>Cook</li>
-              </ul>
-            </div>
+    <Layout pages={['Home', 'Shop']}>
+      <StyledContent>
+        <div className="filter-box">
+          <div>
+            <h2>Search</h2>
+            <input type="text" placeholder="Search books" />
           </div>
-          <div className="books-box">
-            <div className="books">
-              {[1, 2, 3, 4, 5, 6, 7].map((item, index) => (
-                <div className="wrapper" key={index}>
-                  <div className="item">
-                    <div className="item__image-box">
-                      <a href="/shop/Eassy way to learn JQuery">
-                        <img src={jqueryImg} alt="img" />
-                      </a>
-                      <div className="actions">
-                        <Link to="/shop/The Alchemist">View</Link>
-                      </div>
-                    </div>
-                    <div className="item__content">
-                      <a href="/shop/The Alchemist">The Alchemist</a>
-                      <p>35$</p>
+          <div>
+            <h2>Categories</h2>
+            <ul>
+              <li>Biography</li>
+              <li>Adventure</li>
+              <li>Children</li>
+              <li>Cook</li>
+            </ul>
+          </div>
+        </div>
+        <div className="books-box">
+          <div className="books">
+            {[1, 2, 3, 4, 5, 6, 7].map((item, index) => (
+              <div className="wrapper" key={index}>
+                <div className="item">
+                  <div className="item__image-box">
+                    <a href="/shop/Eassy way to learn JQuery">
+                      <img src={jqueryImg} alt="img" />
+                    </a>
+                    <div className="actions">
+                      <Link to="/shop/The Alchemist">View</Link>
                     </div>
                   </div>
+                  <div className="item__content">
+                    <a href="/shop/The Alchemist">The Alchemist</a>
+                    <p>35$</p>
+                  </div>
                 </div>
-              ))}
-            </div>
-            <PaginationBox pageSize={3} total={15} onChange={(page) => console.log(page)} />
+              </div>
+            ))}
           </div>
-        </StyledContent>
-      </main>
-      <Footer />
-    </>
+          <PaginationBox pageSize={3} total={15} onChange={page => console.log(page)} />
+        </div>
+      </StyledContent>
+    </Layout>
   );
 };
 

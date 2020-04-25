@@ -54,6 +54,7 @@ const Container = styled.section`
 
   @media screen and (max-width: 750px) {
     flex-direction: column;
+    height: 600px;
 
     .heading > div > h2 {
       font-size: 40px;
@@ -63,10 +64,7 @@ const Container = styled.section`
   @media screen and (max-width: 480px) {
     .heading > div {
       > h2 {
-        font-size: 20px;
-      }
-      > p {
-        font-size: 16px;
+        font-size: 30px;
       }
     }
   }

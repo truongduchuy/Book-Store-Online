@@ -17,13 +17,21 @@ const Container = styled.div`
       justify-content: space-between;
     }
 
-    .rate-box {
+    .rating-box {
       padding-bottom: 20px;
       border-bottom: 1px solid #eee;
       margin-bottom: 20px;
+      display: flex;
+      flex-direction: column;
+      font-weight: 500;
 
       > span {
         margin-right: 40px;
+      }
+
+      > div {
+        font-size: 50px;
+        color: red;
       }
     }
 
@@ -34,6 +42,7 @@ const Container = styled.div`
 
           > ul {
             margin-bottom: 10px;
+            font-size: 16px;
           }
         }
       }
@@ -54,12 +63,13 @@ const Reviews = () => (
   <Container>
     <div className="content">
       <div className="top-box">
-        <h2>Customer Reviews</h2>
+        <h2>Reviews</h2>
         <Button lowercase padding="10px 25px" label="Write a review" />
       </div>
-      <div className="rate-box">
-        <span>Average customer rating</span>
+      <div className="rating-box">
+        <div>4.5/5</div>
         <Rate allowHalf defaultValue={4.5} disabled />
+        <span>Average customer rating</span>
       </div>
       <div className="reviews">
         <div className="review">
