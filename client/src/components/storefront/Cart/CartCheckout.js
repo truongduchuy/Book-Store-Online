@@ -1,12 +1,13 @@
 import React from 'react';
 import styled from 'styled-components';
+import Button from '../Button';
 
 const StyledCard = styled.div`
   display: flex;
   justify-content: flex-end;
 
   > div {
-    width: 200px;
+    width: 250px;
     box-shadow: 1px 3px 5px rgba(0, 0, 0, 0.5);
     padding: 20px;
 
@@ -20,6 +21,15 @@ const StyledCard = styled.div`
       justify-content: space-between;
     }
   }
+
+  .checkout-btn {
+    margin-top: 20px;
+
+    > button {
+      max-width: 100%;
+      width: 100%;
+    }
+  }
 `;
 
 const Cart = () => (
@@ -29,6 +39,9 @@ const Cart = () => (
       <div>
         <p>Total:</p>
         <p>$35</p>
+      </div>
+      <div className="checkout-btn">
+        <Button>Checkout</Button>
       </div>
     </div>
   </StyledCard>

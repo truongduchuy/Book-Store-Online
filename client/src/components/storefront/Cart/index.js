@@ -3,7 +3,6 @@ import { Icon } from 'antd';
 import styled from 'styled-components';
 import Layout from '../Layout';
 import AlchemistImg from './alchemist.jpg';
-import Button from '../Button';
 import CardCheckout from './CartCheckout';
 
 const StyledContent = styled.div`
@@ -123,12 +122,6 @@ const StyledContent = styled.div`
       }
     }
   }
-
-  .checkout-btn {
-    margin-top: 20px;
-    display: flex;
-    justify-content: flex-end;
-  }
 `;
 
 const Cart = () => {
@@ -170,9 +163,6 @@ const Cart = () => {
           </tbody>
         </table>
         <CardCheckout />
-        <div className="checkout-btn">
-          <Button>Checkout</Button>
-        </div>
       </StyledContent>
     </Layout>
   );
