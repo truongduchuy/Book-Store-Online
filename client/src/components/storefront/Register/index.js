@@ -9,7 +9,9 @@ import Button from 'antd-components/button';
 import { StyledForm } from '../Login';
 
 const validationSchema = object().shape({
-  name: string().required(),
+  username: string().required(),
+  phoneNumber: string().required('Phone mumber is a required field'),
+  address: string().required(),
   email: string().required().email('Email is invalid'),
   password: string().required(),
 });
@@ -24,9 +26,11 @@ const Login = () => {
   const renderForm = ({ handleSubmit, ...form }) => (
     <Form className="form">
       <h2>Registation</h2>
-      <Field form={form} name="name" label="User name" component={Input} />
+      <Field form={form} name="username" label="Username" component={Input} />
       <Field form={form} name="email" label="Email" component={Input} />
       <Field form={form} name="password" label="Password" type="password" component={Input} />
+      <Field form={form} name="phoneNumber" label="Phone Number" component={Input} />
+      <Field form={form} name="address" label="Address" component={Input} />
       <div>
         <Button htmlType="submit" onClick={handleSubmit}>
           Register
@@ -41,7 +45,7 @@ const Login = () => {
   };
 
   return (
-    <StyledForm>
+    <StyledForm style={{ width: '500px' }}>
       <Formik
         validateOnChange={false}
         validateOnBlur={false}

@@ -5,7 +5,13 @@ import BreadImg from './bread.jpg';
 import lodash from 'lodash';
 
 const StyledImage = styled.div`
+  height: 200px;
   position: relative;
+
+  > img {
+    height: 200px;
+    width: 100%;
+  }
 
   > div:nth-child(2) {
     position: absolute;
@@ -27,8 +33,14 @@ const StyledImage = styled.div`
         margin: 0 10px;
       }
     }
+  }
 
-    @media screen and (max-width: 480px) {
+  @media screen and (max-width: 480px) {
+    > img {
+      width: initial;
+    }
+
+    > div:nth-child(2) {
       transform: translate(0, -50%);
       left: 0;
       right: 0;
@@ -53,7 +65,7 @@ const BreadCrumb = ({ pages }) => {
                 <span>/</span>
               </div>
             ) : (
-              <p>{lodash.upperFirst(page)}</p>
+              <p key={index}>{lodash.upperFirst(page)}</p>
             ),
           )}
         </div>

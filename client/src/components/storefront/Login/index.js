@@ -49,6 +49,7 @@ export const StyledForm = styled.div`
 
   @media screen and (max-width: 480px) {
     width: calc(100% - 30px);
+    max-width: calc(100% - 30px);
   }
 `;
 

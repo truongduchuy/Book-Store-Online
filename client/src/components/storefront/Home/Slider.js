@@ -118,8 +118,8 @@ const MutipleSlidesPerView = () => {
   return (
     <Container>
       <Swiper {...params}>
-        {[1, 2, 3, 4, 5, 6, 7, 8, 9].map(item => (
-          <div className="item">
+        {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((item, index) => (
+          <div key={index} className="item">
             <a href="###">
               <div className="image">
                 <img src={item % 2 === 0 ? theStar : selfHelpImg} alt="book" />
