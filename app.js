@@ -1,8 +1,10 @@
 const express = require('express');
 const path = require('path');
 require('./db/mongoose');
+require('./config/cloudinary');
 const userRouter = require('./routes/user');
 const genreRouter = require('./routes/genre');
+const bookRouter = require('./routes/book');
 const cors = require('cors');
 
 const app = express();
@@ -17,7 +19,8 @@ app.get('/api/test', (req, res) => {
 });
 
 app.use('/api', userRouter);
-app.use('/api', genreRouter);
+app.use('/api/genres', genreRouter);
+app.use('/api/books', bookRouter);
 
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static(path.join(__dirname, 'client', 'build')));

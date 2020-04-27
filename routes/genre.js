@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Genre = require('../models/genre');
 
-router.get('/genres', async (req, res) => {
+router.get('/', async (req, res) => {
   try {
     const genres = await Genre.find({});
 
@@ -13,7 +13,7 @@ router.get('/genres', async (req, res) => {
   }
 });
 
-router.post('/genres', async (req, res) => {
+router.post('/', async (req, res) => {
   try {
     const genre = new Genre(req.body);
 
@@ -26,7 +26,7 @@ router.post('/genres', async (req, res) => {
   }
 });
 
-router.delete('/genres/:id', async (req, res) => {
+router.delete('/:id', async (req, res) => {
   try {
     await Genre.deleteOne({ _id: req.params.id });
 
@@ -37,7 +37,7 @@ router.delete('/genres/:id', async (req, res) => {
   }
 });
 
-router.patch('/genres/:id', async (req, res) => {
+router.patch('/:id', async (req, res) => {
   try {
     await Genre.updateOne({ _id: req.params.id }, req.body);
 

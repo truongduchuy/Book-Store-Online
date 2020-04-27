@@ -18,7 +18,7 @@ const StyledHeader = styled.header`
     justify-content: space-between;
     padding: 0 70px;
     align-items: center;
-    box-shadow: 1px 2px 3px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 0 2px 0 rgba(56, 69, 84, 0.2);
 
     &__logo {
       a {
@@ -42,7 +42,7 @@ const StyledHeader = styled.header`
         align-self: center;
 
         a {
-          padding: 30px 0;
+          padding: 20px 0;
           display: inline-block;
           text-transform: uppercase;
           font-weight: 600;
@@ -59,7 +59,7 @@ const StyledHeader = styled.header`
     }
 
     @media screen and (max-width: 750px) {
-      padding: 30px;
+      padding: 20px 30px;
 
       &__logo {
         width: 100%;
@@ -108,12 +108,12 @@ const StyledHeader = styled.header`
         transition: all .5s;
         display: flex;
         position: absolute;
-        top: 92.73px;
+        top: 73px;
         width: 30%;
         right: 0;
         flex-direction: column;
         justify-content: space-around;
-        height: calc(100vh - 92.73px);
+        height: calc(100vh - 73px);
         background-color: #97c0e8;
         color: white;
         opacity: 0;
