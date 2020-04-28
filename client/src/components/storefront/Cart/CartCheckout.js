@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { PayPalButton } from 'react-paypal-button-v2';
 import { Link } from 'react-router-dom';
@@ -31,7 +31,6 @@ const StyledCard = styled.div`
 
 const Cart = () => {
   const [isLogined, setlogined] = useState(false);
-  console.log(process.env.REACT_APP_PAYPAL_ID);
   return (
     <StyledCard>
       <div>
@@ -42,15 +41,14 @@ const Cart = () => {
         </div>
         {!isLogined ? (
           <PayPalButton
-            disableCard
             shippingPreference="NO_SHIPPING"
-            amount={25}
+            amount={30}
             style={{
               layout: 'horizontal',
               label: 'pay',
             }}
             clientId={process.env.REACT_APP_PAYPAL_ID}
-            disableFunding
+            options={{ disableFunding: 'credit', locale: 'en-VN' }}
             onSuccess={(details, data) => {
               console.log('details ', details);
               console.log('data ', data);
