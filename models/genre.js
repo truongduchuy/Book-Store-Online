@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const Book = require('./book');
 const { Schema } = mongoose;
 
 const genreSchema = new Schema({
@@ -8,6 +9,14 @@ const genreSchema = new Schema({
     trim: true,
     unique: true,
   },
+});
+
+genreSchema.pre('remove', async function (next) {
+  const genre = this;
+
+  await Book.deleteMany({ genre: genre._id });
+
+  next();
 });
 
 const Genre = mongoose.model('Genre', genreSchema);

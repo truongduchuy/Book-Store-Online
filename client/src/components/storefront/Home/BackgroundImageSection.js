@@ -1,6 +1,5 @@
 import React from 'react';
 import styled from 'styled-components';
-import ReadingImg from './reading.jpg';
 
 const Container = styled.section`
   height: 544px;
@@ -72,7 +71,7 @@ const Container = styled.section`
 
 const BackgroundImage = () => {
   return (
-    <Container img={ReadingImg}>
+    <Container img="https://res.cloudinary.com/dm1wgyp1n/image/upload/v1588132252/reading_ok2spb.jpg">
       <div className="heading">
         <div>
           <h2>One of a Kind Items</h2>

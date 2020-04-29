@@ -28,8 +28,8 @@ router.post('/', async (req, res) => {
 
 router.delete('/:id', async (req, res) => {
   try {
-    await Genre.deleteOne({ _id: req.params.id });
-
+    const genre = await Genre.findOne({ _id: req.params.id });
+    await genre.remove();
     res.sendStatus(200);
   } catch (e) {
     console.log(e.message);

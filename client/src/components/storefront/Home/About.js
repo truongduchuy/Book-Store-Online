@@ -1,6 +1,5 @@
 import React from 'react';
 import styled from 'styled-components';
-import libraryImg from './library.jpg';
 
 const Container = styled.section`
   background: #97c0e8;
@@ -59,7 +58,10 @@ const About = () => {
     <Container id="about">
       <div>
         <div className="image-box">
-          <img src={libraryImg} alt="library" />
+          <img
+            src="https://res.cloudinary.com/dm1wgyp1n/image/upload/v1588131270/library_hgtgn1.webp"
+            alt="library"
+          />
         </div>
         <div className="heading">
           <h1>The Story of Book Store</h1>
