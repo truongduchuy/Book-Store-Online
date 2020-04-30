@@ -28,13 +28,7 @@ const BookSchema = new Schema({
 // BookSchema.virtual('reviews', {
 //   ref: 'Review',
 //   localField: '_id',
-//   foreignField: 'book',
-// });
-
-// BookSchema.virtual('cutomers', {
-//   ref: 'Customer',
-//   localField: '_id',
-//   foreignField: 'books',
+//   foreignField: 'bookId',
 // });
 
 const Book = mongoose.model('Book', BookSchema);

@@ -2,11 +2,10 @@ const mongoose = require('mongoose');
 const validator = require('validator');
 const { Schema } = mongoose;
 
-const userSchema = new Schema({
+const CustomerSchema = new Schema({
   email: {
     type: String,
     unique: true,
-    required: true,
     trim: true,
     lowercase: true,
     validate(value) {
@@ -28,8 +27,16 @@ const userSchema = new Schema({
     type: String,
     required: true,
   },
+  phoneNumber: {
+    type: String,
+    required: true,
+  },
+  address: {
+    type: String,
+    required: true,
+  },
 });
 
-const User = mongoose.model('User', userSchema);
+const Customer = mongoose.model('Customer', CustomerSchema);
 
-module.exports = User;
+module.exports = Customer;

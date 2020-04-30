@@ -104,16 +104,15 @@ const StyledHeader = styled.header`
           display: none;
         }
 
-        transform: translateX(30vw);
+        transform: translateX(100vw);
         transition: all .5s;
         display: flex;
         position: absolute;
         top: 73px;
-        width: 30%;
+        width: 100%;
         right: 0;
         flex-direction: column;
         justify-content: space-around;
-        height: calc(100vh - 73px);
         background-color: #97c0e8;
         color: white;
         opacity: 0;

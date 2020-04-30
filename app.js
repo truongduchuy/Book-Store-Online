@@ -5,6 +5,7 @@ require('./config/cloudinary');
 const userRouter = require('./routes/user');
 const genreRouter = require('./routes/genre');
 const bookRouter = require('./routes/book');
+const customerRouter = require('./routes/customer');
 const cors = require('cors');
 
 const app = express();
@@ -21,6 +22,7 @@ app.get('/api/test', (req, res) => {
 app.use('/api', userRouter);
 app.use('/api/genres', genreRouter);
 app.use('/api/books', bookRouter);
+app.use('/api/customers', customerRouter);
 
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static(path.join(__dirname, 'client', 'build')));
