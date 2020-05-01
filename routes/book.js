@@ -19,11 +19,16 @@ router.get('/', async (req, res) => {
 
     const books = await Book.find(filterObj)
       .skip((page - 1) * Number(size))
-      .limit(Number(size));
+      .limit(Number(size))
+      .populate({
+        path: 'genre',
+        select: '-_id',
+      })
+      .exec();
 
     res.send({
       total,
-      books,
+      data: books,
     });
   } catch (e) {
     console.log(e.message);
@@ -36,9 +41,9 @@ router.post(
   upload.single('image'),
   async (req, res) => {
     try {
-      const { title, description, price, genre } = req.body;
+      const { title, description, price, genre, quantity } = req.body;
 
-      if (!title || !description || !price || !genre) {
+      if (!title || !description || !price || !genre || !quantity) {
         res.status(400).json({ error: 'Bad request!' });
       }
 
@@ -52,6 +57,7 @@ router.post(
         .catch(e => res.send(500).send({ error: 'Upload failed!' }));
 
       const newBook = new Book({
+        quantity,
         title,
         description,
         price,
@@ -60,7 +66,7 @@ router.post(
       });
 
       await newBook.save();
-
+      await newBook.populate('genre').execPopulate();
       res.send(newBook);
     } catch (e) {
       console.log(e.message);
@@ -81,7 +87,7 @@ router.patch(
       const { body } = req;
 
       const updates = Object.keys(body);
-      const allowedUpdates = ['title', 'description', 'price', 'genre'];
+      const allowedUpdates = ['title', 'description', 'price', 'genre', 'quantity'];
 
       if (!isOperationValid(updates, allowedUpdates)) {
         res.status(400).json({ error: 'Bad request!' });
@@ -131,7 +137,7 @@ router.delete('/:id', async (req, res) => {
     const book = await Book.findOne({ _id: id });
     await book.remove();
 
-    res.send({ success: true });
+    res.sendStatus(200);
   } catch (e) {
     console.log(e.message);
     res.status(500).send({ error: 'delete book failed!' });

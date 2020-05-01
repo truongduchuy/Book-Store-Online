@@ -19,6 +19,10 @@ const BookSchema = new Schema({
     type: Number,
     required: true,
   },
+  quantity: {
+    type: Number,
+    required: true,
+  },
   genre: {
     type: Schema.Types.ObjectId,
     ref: 'Genre',

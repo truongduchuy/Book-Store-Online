@@ -18,23 +18,16 @@ import {
   SEARCH_VALUE_CHANGE,
 } from './ducks';
 import withHeader from '../withHeader';
+import ActionsBox from '../ActionsBox';
 
 const Container = styled.div`
-  .top-box {
-    margin: 40px 20px;
-    align-items: center;
-    display: flex;
-    justify-content: space-between;
-    > div:first-child {
-      display: flex;
-      align-items: center;
+  padding: 50px 100px;
 
-      h2 {
-        margin-right: 20px;
-      }
-    }
+  .table-box {
+    margin-top: 30px;
   }
 `;
+
 const StyledForm = styled.div`
   .action-box {
     display: flex;
@@ -69,7 +62,7 @@ const Genres = ({ genreStore, dispatch }) => {
     setModalData({ isOpen: false, editingId: '' });
   };
 
-  const onSubmit = (values) => {
+  const onSubmit = values => {
     if (editingId !== '') {
       dispatch(createAction(GENRE_EDIT_REQUEST, { id: editingId, data: values }));
     } else {
@@ -78,7 +71,7 @@ const Genres = ({ genreStore, dispatch }) => {
     handleCloseModal();
   };
 
-  const genre = genres.find((genre) => genre._id === editingId);
+  const genre = genres.find(genre => genre._id === editingId);
 
   const renderForm = ({ handleSubmit, ...form }) => (
     <Form className="form">
@@ -109,7 +102,7 @@ const Genres = ({ genreStore, dispatch }) => {
 
   const columns = [
     {
-      title: 'STT',
+      title: '#',
       key: '_id',
       render: (text, record, index) => <span>{index + 1}</span>,
     },
@@ -154,19 +147,12 @@ const Genres = ({ genreStore, dispatch }) => {
           />
         </StyledForm>
       </Modal>
-      <div className="top-box">
-        <div>
-          <h2>Genres</h2>
-          <Search
-            placeholder="search"
-            style={{ width: '250px' }}
-            onSearch={(value) => dispatch(createAction(SEARCH_VALUE_CHANGE, value))}
-          />
-        </div>
-        <Button type="primary" onClick={() => setModalData({ isOpen: true, editingId: '' })}>
-          New Genre
-        </Button>
-      </div>
+      <ActionsBox
+        title="Genres"
+        buttonLabel="New Genre"
+        onSearch={value => dispatch(createAction(SEARCH_VALUE_CHANGE, value))}
+        onClick={() => setModalData({ isOpen: true, editingId: '' })}
+      />
       <div className="table-box">
         <Table
           bordered
@@ -181,6 +167,6 @@ const Genres = ({ genreStore, dispatch }) => {
   );
 };
 
-export default connect((state) => ({
+export default connect(state => ({
   genreStore: state.genre,
 }))(withHeader(Genres));

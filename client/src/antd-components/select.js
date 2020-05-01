@@ -11,7 +11,7 @@ const StyledSelect = styled(Select)`
 `;
 
 export default class extends Component {
-  _onChange = (value) => {
+  _onChange = value => {
     const { field, onChange, name } = this.props;
 
     if (onChange) onChange({ target: { value, name: (field && field.name) || name } });
@@ -49,14 +49,8 @@ export default class extends Component {
 
   render() {
     const { field, options, onChange, optionBinding, value, renderOption, ...props } = this.props;
-
     return (
-      <StyledSelect
-        {...field}
-        {...props}
-        onChange={this._onChange}
-        value={(field && field.value) || value}
-      >
+      <StyledSelect {...props} onChange={this._onChange} value={(field && field.value) || value}>
         {options.map(this._renderOption)}
       </StyledSelect>
     );
