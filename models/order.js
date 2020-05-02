@@ -14,7 +14,7 @@ const OrderSchema = new Schema(
       },
     ],
   },
-  { timestamps: true },
+  { timestamps: true, versionKey: false },
 );
 
 const Order = mongoose.model('Order', OrderSchema);

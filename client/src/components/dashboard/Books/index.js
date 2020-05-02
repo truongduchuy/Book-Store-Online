@@ -11,6 +11,7 @@ import Table from 'antd-components/table';
 import Button from 'antd-components/button';
 import { createAction } from 'dorothy/utils';
 import FormModal from './FormModal';
+import ExpandedRow from './ExpandedRow';
 
 const pageSize = process.env.REACT_APP_PAGE_SIZE;
 
@@ -26,6 +27,8 @@ const Books = ({ bookStore, dispatch }) => {
   const [editingId, setEditingId] = useState(null);
   const [page, setPage] = useState(1);
   const [isModalOpen, setModalOpen] = useState(false);
+  const [expandedRowKeys, setExpandedRowKeys] = useState([]);
+
   const { books, isWaitingBooks } = bookStore;
   const { total, data } = books;
 
@@ -59,6 +62,11 @@ const Books = ({ bookStore, dispatch }) => {
         },
       },
     });
+  };
+
+  const handleExpandRow = rowKey => {
+    if (expandedRowKeys[0] === rowKey) setExpandedRowKeys([]);
+    else setExpandedRowKeys([rowKey]);
   };
 
   const columns = [
@@ -134,6 +142,11 @@ const Books = ({ bookStore, dispatch }) => {
           bordered
           rowKey={(row, index) => index}
           dataSource={data.length > 0 ? data : null}
+          expandedRowKeys={expandedRowKeys}
+          onExpandedRowsChange={expandedRows => {
+            handleExpandRow(expandedRows[expandedRows.length - 1]);
+          }}
+          expandedRowRender={record => <ExpandedRow bookId={record._id} />}
           columns={columns}
           loading={isWaitingBooks}
         />

@@ -13,6 +13,12 @@ export const BOOK_DELETE_RESPONSE = 'BOOK_DELETE_RESPONSE';
 export const BOOK_UPDATE_REQUEST = 'BOOK_UPDATE_REQUEST';
 export const BOOK_UPDATE_RESPONSE = 'BOOK_UPDATE_RESPONSE';
 
+export const REVIEWS_REQUEST = 'REVIEWS_REQUEST';
+export const REVIEWS_RESPONSE = 'REVIEWS_RESPONSE';
+
+export const REVIEW_DELETE_REQUEST = 'REVIEW_DELETE_REQUEST';
+export const REVIEW_DELETE_RESPONSE = 'REVIEW_DELETE_RESPONSE';
+
 export const REQUEST_ERROR = 'REQUEST_ERROR';
 
 function* requestBooks(action) {
@@ -100,11 +106,46 @@ function* watchUpdateBook() {
   yield takeLatest(BOOK_UPDATE_REQUEST, updateBook);
 }
 
+function* requestReviews(action) {
+  try {
+    console.log('action.payload', action.payload);
+    const { id, page, size } = action.payload;
+    const query = `page=${page}&size=${size}`;
+    const response = yield call(callApi, 'GET', `/api/reviews/${id}?${query}`);
+
+    if (response) yield put(createAction(REVIEWS_RESPONSE, response));
+  } catch (error) {
+    console.log(error);
+    yield put(createAction(REQUEST_ERROR));
+  }
+}
+
+function* watchRequestReviews() {
+  yield takeLatest(REVIEWS_REQUEST, requestReviews);
+}
+
+function* deleteReview(action) {
+  try {
+    const response = yield call(callApi, 'DELETE', `/api/reviews/${action.payload.id}`);
+
+    if (response) yield put(createAction(REVIEW_DELETE_RESPONSE, action.payload));
+  } catch (error) {
+    console.log(error);
+    yield put(createAction(REQUEST_ERROR));
+  }
+}
+
+function* watchDeleteReview() {
+  yield takeLatest(REVIEW_DELETE_REQUEST, deleteReview);
+}
+
 const initBook = {
   books: { total: 0, data: [] },
+  reviewData: [],
   isWaitingBooks: false,
   isWaitingAdd: false,
   isWaitingUpdate: false,
+  isWaitingReviews: false,
 };
 
 const bookActionHandlers = {
@@ -148,11 +189,50 @@ const bookActionHandlers = {
       },
     };
   },
+  [REVIEWS_REQUEST]: state => ({
+    ...state,
+    isWaitingReviews: true,
+  }),
+  [REVIEWS_RESPONSE]: (state, action) => {
+    const { bookId } = action.payload;
+
+    let newReviewData = [];
+    const bookIdIsNotExisted = state.reviewData.every(item => item.bookId !== bookId);
+
+    if (bookIdIsNotExisted) {
+      newReviewData = [...state.reviewData, action.payload];
+    } else {
+      newReviewData = state.reviewData.map(item =>
+        item.bookId === bookId ? action.payload : item,
+      );
+    }
+
+    return {
+      ...state,
+      reviewData: newReviewData,
+      isWaitingReviews: false,
+    };
+  },
+  [REVIEW_DELETE_RESPONSE]: (state, action) => {
+    return {
+      ...state,
+      reviewData: state.reviewData.map(item =>
+        item.bookId === action.payload.bookId
+          ? {
+              ...item,
+              total: item.total - 1,
+              reviews: item.reviews.filter(i => i._id !== action.payload.id),
+            }
+          : item,
+      ),
+    };
+  },
   [REQUEST_ERROR]: state => ({
     ...state,
     isWaitingBooks: false,
     isWaitingAdd: false,
     isWaitingUpdate: false,
+    isWaitingReviews: false,
   }),
 };
 
@@ -162,4 +242,6 @@ export const bookSagas = [
   fork(watchRequestBooks),
   fork(watchDeleteBook),
   fork(watchUpdateBook),
+  fork(watchRequestReviews),
+  fork(watchDeleteReview),
 ];

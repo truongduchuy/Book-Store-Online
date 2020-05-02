@@ -12,6 +12,10 @@ const ReviewSchema = new Schema(
     },
     rating: {
       type: Number,
+      required: true,
+      validate(value) {
+        if (value < 0 && value > 5) throw new Error('rating must be between 0 and 5');
+      },
     },
     reviewer: {
       type: Schema.Types.ObjectId,
@@ -24,6 +28,7 @@ const ReviewSchema = new Schema(
   },
   {
     timestamps: true,
+    versionKey: false,
   },
 );
 

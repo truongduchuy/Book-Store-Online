@@ -100,12 +100,6 @@ router.patch(
         return res.status(404).send();
       }
 
-      // check whether title is exist
-      if (book.title !== req.body.title) {
-        const count = await Book.countDocuments({ title: body.title });
-        if (count > 0) res.status(400).json({ error: 'title is used!' });
-      }
-
       updates.forEach(update => (book[update] = body[update]));
 
       if (req.file) {

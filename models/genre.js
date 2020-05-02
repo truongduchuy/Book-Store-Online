@@ -2,14 +2,17 @@ const mongoose = require('mongoose');
 const Book = require('./book');
 const { Schema } = mongoose;
 
-const genreSchema = new Schema({
-  name: {
-    type: String,
-    required: true,
-    trim: true,
-    unique: true,
+const genreSchema = new Schema(
+  {
+    name: {
+      type: String,
+      required: true,
+      trim: true,
+      unique: true,
+    },
   },
-});
+  { versionKey: false },
+);
 
 genreSchema.pre('remove', async function (next) {
   const genre = this;

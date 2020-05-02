@@ -6,6 +6,8 @@ const userRouter = require('./routes/user');
 const genreRouter = require('./routes/genre');
 const bookRouter = require('./routes/book');
 const customerRouter = require('./routes/customer');
+const reviewRouter = require('./routes/review');
+
 const cors = require('cors');
 
 const app = express();
@@ -23,6 +25,7 @@ app.use('/api', userRouter);
 app.use('/api/genres', genreRouter);
 app.use('/api/books', bookRouter);
 app.use('/api/customers', customerRouter);
+app.use('/api/reviews', reviewRouter);
 
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static(path.join(__dirname, 'client', 'build')));

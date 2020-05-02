@@ -56,4 +56,16 @@ router.get('/', async (req, res) => {
   }
 });
 
+router.post('/register', async (req, res) => {
+  try {
+    const newCustomer = new Customer(req.body);
+    await newCustomer.save();
+
+    res.send(newCustomer);
+  } catch (e) {
+    console.log(e.message);
+    res.status(500).send();
+  }
+});
+
 module.exports = router;
