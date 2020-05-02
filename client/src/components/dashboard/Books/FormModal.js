@@ -11,7 +11,7 @@ import Notification from 'antd-components/notification';
 import Input, { TextAreaInput } from 'antd-components/input';
 import Select from 'antd-components/select';
 import { GENRES_REQUEST } from '../Genres/ducks';
-import { BOOK_ADD_REQUEST } from './ducks';
+import { BOOK_ADD_REQUEST, BOOK_UPDATE_REQUEST } from './ducks';
 
 const StyledForm = styled.div`
   .row {
@@ -30,6 +30,7 @@ const StyledForm = styled.div`
     &:nth-child(4) {
       display: block;
     }
+
     &:last-child {
       justify-content: flex-end;
     }
@@ -44,14 +45,25 @@ const validationSchema = object().shape({
   genre: string().required(),
 });
 
-const FormModal = ({ onClose, visible, title, genreStore, isWaitingAdd, dispatch }) => {
+const FormModal = ({
+  onClose,
+  visible,
+  name,
+  genreStore,
+  isWaitingAdd,
+  dispatch,
+  editingBook,
+  isWaitingUpdate,
+}) => {
   const [fileList, setFileList] = useState([]);
+  const { title, description, price, quantity, genre, _id } = editingBook || {};
+
   const initialValues = {
-    title: '',
-    description: '',
-    price: '',
-    quantity: '',
-    genre: '',
+    title: title || '',
+    description: description || '',
+    price: price || '',
+    quantity: quantity || '',
+    genre: genre?._id || '',
   };
 
   const handleFile = file => {
@@ -67,7 +79,6 @@ const FormModal = ({ onClose, visible, title, genreStore, isWaitingAdd, dispatch
     });
   }, [dispatch]);
 
-  console.log('a', genreStore);
   const renderForm = ({ handleSubmit, ...form }) => (
     <Form className="form">
       <StyledForm>
@@ -105,7 +116,7 @@ const FormModal = ({ onClose, visible, title, genreStore, isWaitingAdd, dispatch
             onRemove={() => setFileList([])}
           >
             <Button>
-              <Icon type="upload" /> Click to Upload
+              <Icon type="upload" /> {editingBook ? 'Update Image' : 'Click to Upload'}
             </Button>
           </Upload>
         </div>
@@ -114,8 +125,8 @@ const FormModal = ({ onClose, visible, title, genreStore, isWaitingAdd, dispatch
             style={{ marginRight: '20px' }}
             htmlType="submit"
             onClick={handleSubmit}
-            disabled={fileList.length === 0}
-            loading={isWaitingAdd}
+            disabled={fileList.length === 0 && !editingBook}
+            loading={isWaitingAdd || isWaitingUpdate}
           >
             Submit
           </Button>
@@ -126,21 +137,38 @@ const FormModal = ({ onClose, visible, title, genreStore, isWaitingAdd, dispatch
   );
 
   const onSubmit = values => {
-    const payload = {
-      ...values,
-      image: fileList[0],
-      callBack: data => {
-        if (data) Notification.success('Book Created Successfully!');
-        else Notification.error('Create Book Failed!');
-        onClose();
-      },
-    };
-    dispatch({ type: BOOK_ADD_REQUEST, payload });
+    if (!editingBook) {
+      const payload = {
+        ...values,
+        image: fileList[0],
+        callBack: data => {
+          if (data) Notification.success('Book Created Successfully!');
+          else Notification.error('Create Book Failed!');
+          onClose();
+        },
+      };
+      dispatch({ type: BOOK_ADD_REQUEST, payload });
+    } else {
+      console.log(values);
+      dispatch({
+        type: BOOK_UPDATE_REQUEST,
+        payload: {
+          ...values,
+          _id,
+          image: fileList[0],
+          callBack: data => {
+            if (data) Notification.success('Book Updated Successfully!');
+            else Notification.error('Update Book Failed!');
+            onClose();
+          },
+        },
+      });
+    }
   };
 
   return (
     <Drawer
-      title={title}
+      title={name}
       width={500}
       onClose={onClose}
       visible={visible}
@@ -161,4 +189,5 @@ const FormModal = ({ onClose, visible, title, genreStore, isWaitingAdd, dispatch
 export default connect(state => ({
   genreStore: state.genre,
   isWaitingAdd: state.book.isWaitingAdd,
+  isWaitingUpdate: state.book.isWaitingUpdate,
 }))(FormModal);

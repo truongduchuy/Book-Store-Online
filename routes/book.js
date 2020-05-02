@@ -22,7 +22,6 @@ router.get('/', async (req, res) => {
       .limit(Number(size))
       .populate({
         path: 'genre',
-        select: '-_id',
       })
       .exec();
 
@@ -66,7 +65,7 @@ router.post(
       });
 
       await newBook.save();
-      await newBook.populate('genre').execPopulate();
+
       res.send(newBook);
     } catch (e) {
       console.log(e.message);
@@ -102,8 +101,12 @@ router.patch(
       }
 
       // check whether title is exist
-      const count = await Book.countDocuments({ title: body.title });
-      if (count > 0) res.status(400).json({ error: 'title is used!' });
+      if (book.title !== req.body.title) {
+        const count = await Book.countDocuments({ title: body.title });
+        if (count > 0) res.status(400).json({ error: 'title is used!' });
+      }
+
+      updates.forEach(update => (book[update] = body[update]));
 
       if (req.file) {
         const imageUrl = await cloudinary.uploader
@@ -113,8 +116,6 @@ router.patch(
 
         book['imageUrl'] = imageUrl;
       }
-
-      updates.forEach(update => (book[update] = body[update]));
 
       await book.save();
 
@@ -137,7 +138,7 @@ router.delete('/:id', async (req, res) => {
     const book = await Book.findOne({ _id: id });
     await book.remove();
 
-    res.sendStatus(200);
+    res.send({ success: true });
   } catch (e) {
     console.log(e.message);
     res.status(500).send({ error: 'delete book failed!' });

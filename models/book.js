@@ -18,15 +18,26 @@ const BookSchema = new Schema({
   price: {
     type: Number,
     required: true,
+    validate(value) {
+      if (value <= 0) throw new Error('price must be a positive number');
+    },
   },
   quantity: {
     type: Number,
     required: true,
+    validate(value) {
+      if (value <= 0) throw new Error('quantity must be a positive number');
+    },
   },
   genre: {
     type: Schema.Types.ObjectId,
     ref: 'Genre',
   },
+});
+
+BookSchema.post('save', async function (book, next) {
+  await book.populate('genre').execPopulate();
+  next();
 });
 
 // BookSchema.virtual('reviews', {

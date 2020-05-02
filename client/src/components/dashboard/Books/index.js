@@ -6,6 +6,7 @@ import withHeader from '../withHeader';
 import { BOOKS_REQUEST, BOOK_DELETE_REQUEST } from './ducks';
 import ActionsBox from 'components/dashboard/ActionsBox';
 import PaginationBox from 'antd-components/pagination';
+import Notification from 'antd-components/notification';
 import Table from 'antd-components/table';
 import Button from 'antd-components/button';
 import { createAction } from 'dorothy/utils';
@@ -22,6 +23,7 @@ const StyledContent = styled.div`
 `;
 
 const Books = ({ bookStore, dispatch }) => {
+  const [editingId, setEditingId] = useState(null);
   const [page, setPage] = useState(1);
   const [isModalOpen, setModalOpen] = useState(false);
   const { books, isWaitingBooks } = bookStore;
@@ -38,6 +40,25 @@ const Books = ({ bookStore, dispatch }) => {
 
   const handleCloseModal = () => {
     setModalOpen(false);
+    setEditingId(null);
+  };
+
+  const handleEdit = id => {
+    setEditingId(id);
+    setModalOpen(true);
+  };
+
+  const handleDelete = id => {
+    dispatch({
+      type: BOOK_DELETE_REQUEST,
+      payload: {
+        id,
+        callBack: success => {
+          if (success) Notification.success('Book Deleted Successfully!');
+          else Notification.error('Delete Book Failed!');
+        },
+      },
+    });
   };
 
   const columns = [
@@ -58,6 +79,7 @@ const Books = ({ bookStore, dispatch }) => {
     {
       title: 'Title',
       dataIndex: 'title',
+      width: '150px',
     },
     {
       title: 'Description',
@@ -81,13 +103,13 @@ const Books = ({ bookStore, dispatch }) => {
       title: 'Operation',
       render: (name, record) => (
         <div style={{ display: 'flex' }}>
-          <Button onClick={() => console.log('edit book')} type="link">
+          <Button onClick={() => handleEdit(record._id)} type="link">
             Edit
           </Button>
           <Popconfirm
             placement="topRight"
             title="Are you sure to delete?"
-            onConfirm={() => dispatch({ type: BOOK_DELETE_REQUEST, payload: record._id })}
+            onConfirm={() => handleDelete(record._id)}
             okText="Yes"
             cancelText="No"
           >
@@ -125,7 +147,14 @@ const Books = ({ bookStore, dispatch }) => {
           dispatch(createAction(BOOKS_REQUEST, { page, size: pageSize }));
         }}
       />
-      <FormModal title="Create a new book" visible={isModalOpen} onClose={handleCloseModal} />
+      {isModalOpen && (
+        <FormModal
+          name={editingId ? 'Edit Book' : 'Create a new book'}
+          editingBook={data.find(book => book._id === editingId)}
+          visible={isModalOpen}
+          onClose={handleCloseModal}
+        />
+      )}
     </StyledContent>
   );
 };

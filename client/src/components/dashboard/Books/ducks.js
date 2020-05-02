@@ -10,8 +10,10 @@ export const BOOK_ADD_RESPONSE = 'BOOK_ADD_RESPONSE';
 export const BOOK_DELETE_REQUEST = 'BOOK_DELETE_REQUEST';
 export const BOOK_DELETE_RESPONSE = 'BOOK_DELETE_RESPONSE';
 
-export const BOOK_EDIT_REQUEST = 'BOOK_EDIT_REQUEST';
-export const BOOK_EDIT_RESPONSE = 'BOOK_EDIT_RESPONSE';
+export const BOOK_UPDATE_REQUEST = 'BOOK_UPDATE_REQUEST';
+export const BOOK_UPDATE_RESPONSE = 'BOOK_UPDATE_RESPONSE';
+
+export const REQUEST_ERROR = 'REQUEST_ERROR';
 
 function* requestBooks(action) {
   try {
@@ -23,6 +25,7 @@ function* requestBooks(action) {
     if (response) yield put(createAction(BOOKS_RESPONSE, response));
   } catch (error) {
     console.log(error);
+    yield put(createAction(REQUEST_ERROR));
   }
 }
 
@@ -34,7 +37,7 @@ function* addBook(action) {
   const { callBack, ...data } = action.payload;
   try {
     const formData = new FormData();
-    for (let key in action.payload) {
+    for (let key in data) {
       formData.append(key, data[key]);
     }
 
@@ -45,6 +48,7 @@ function* addBook(action) {
     callBack(response);
   } catch (error) {
     console.log(error);
+    yield put(createAction(REQUEST_ERROR));
     callBack();
   }
 }
@@ -54,12 +58,16 @@ function* watchAddBook() {
 }
 
 function* deleteBook(action) {
+  const { callBack, id } = action.payload;
   try {
-    const response = yield call(callApi, 'DELETE', `/api/books/${action.payload}`);
+    const response = yield call(callApi, 'DELETE', `/api/books/${id}`);
 
-    if (response) yield put(createAction(BOOK_DELETE_RESPONSE, action.payload));
+    if (response) yield put(createAction(BOOK_DELETE_RESPONSE, id));
+    callBack(response);
   } catch (error) {
     console.log(error);
+    yield put(createAction(REQUEST_ERROR));
+    callBack();
   }
 }
 
@@ -67,7 +75,37 @@ function* watchDeleteBook() {
   yield takeLatest(BOOK_DELETE_REQUEST, deleteBook);
 }
 
-const initBook = { books: { total: 0, data: [] }, isWaitingBooks: false, isWaitingAdd: false };
+function* updateBook(action) {
+  const { callBack, _id, ...data } = action.payload;
+
+  const formData = new FormData();
+  for (let key in data) {
+    if (key !== 'image' || data[key]) formData.append(key, data[key]);
+  }
+
+  try {
+    const response = yield call(callApi, 'PATCH', `/api/books/${_id}`, formData);
+
+    if (response) yield put(createAction(BOOK_UPDATE_RESPONSE, response));
+    console.log(response);
+    callBack(response);
+  } catch (error) {
+    console.log(error);
+    yield put(createAction(REQUEST_ERROR));
+    callBack();
+  }
+}
+
+function* watchUpdateBook() {
+  yield takeLatest(BOOK_UPDATE_REQUEST, updateBook);
+}
+
+const initBook = {
+  books: { total: 0, data: [] },
+  isWaitingBooks: false,
+  isWaitingAdd: false,
+  isWaitingUpdate: false,
+};
 
 const bookActionHandlers = {
   [BOOKS_REQUEST]: state => ({ ...state, isWaitingBooks: true }),
@@ -85,8 +123,21 @@ const bookActionHandlers = {
       isWaitingAdd: false,
     };
   },
-
+  [BOOK_UPDATE_REQUEST]: (state, action) => ({ ...state, isWaitingUpdate: true }),
+  [BOOK_UPDATE_RESPONSE]: (state, action) => {
+    return {
+      ...state,
+      books: {
+        ...state.books,
+        data: state.books.data.map(book =>
+          book._id === action.payload._id ? action.payload : book,
+        ),
+      },
+      isWaitingUpdate: false,
+    };
+  },
   [BOOK_DELETE_RESPONSE]: (state, action) => {
+    console.log();
     let data = state.books.data.filter(item => item._id !== action.payload);
 
     return {
@@ -97,6 +148,12 @@ const bookActionHandlers = {
       },
     };
   },
+  [REQUEST_ERROR]: state => ({
+    ...state,
+    isWaitingBooks: false,
+    isWaitingAdd: false,
+    isWaitingUpdate: false,
+  }),
 };
 
 export const bookReducer = createReducer(initBook, bookActionHandlers);
@@ -104,5 +161,5 @@ export const bookSagas = [
   fork(watchAddBook),
   fork(watchRequestBooks),
   fork(watchDeleteBook),
-  // fork(watchEditGenre),
+  fork(watchUpdateBook),
 ];

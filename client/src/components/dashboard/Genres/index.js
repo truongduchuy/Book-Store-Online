@@ -7,7 +7,8 @@ import { connect } from 'react-redux';
 import Table from 'antd-components/table';
 import Button from 'antd-components/button';
 import Field from 'antd-components/field';
-import Input, { Search } from 'antd-components/input';
+import Input from 'antd-components/input';
+import Popconfirm from 'antd-components/popConfirm';
 import Modal from 'antd-components/modal';
 import { createAction } from 'dorothy/utils/index';
 import {
@@ -118,12 +119,15 @@ const Genres = ({ genreStore, dispatch }) => {
           <Button onClick={() => setModalData({ ...modalData, editingId: record._id })} type="link">
             Edit
           </Button>
-          <Button
-            onClick={() => dispatch(createAction(GENRE_DELETE_REQUEST, record._id))}
-            type="link"
+          <Popconfirm
+            placement="topRight"
+            title="Are you sure to delete?"
+            onConfirm={() => dispatch(createAction(GENRE_DELETE_REQUEST, record._id))}
+            okText="Yes"
+            cancelText="No"
           >
-            Delete
-          </Button>
+            <Button type="link">Delete</Button>
+          </Popconfirm>
         </>
       ),
     },
@@ -131,22 +135,24 @@ const Genres = ({ genreStore, dispatch }) => {
 
   return (
     <Container>
-      <Modal
-        title={editingId ? 'Edit Genre' : 'New Genre'}
-        visible={isOpen || editingId !== ''}
-        onCancel={handleCloseModal}
-      >
-        <StyledForm>
-          <Formik
-            validateOnChange={false}
-            validateOnBlur={false}
-            initialValues={initialValues}
-            validationSchema={validationSchema}
-            onSubmit={onSubmit}
-            component={renderForm}
-          />
-        </StyledForm>
-      </Modal>
+      {(isOpen || editingId !== '') && (
+        <Modal
+          title={editingId ? 'Edit Genre' : 'New Genre'}
+          visible={isOpen || editingId !== ''}
+          onCancel={handleCloseModal}
+        >
+          <StyledForm>
+            <Formik
+              validateOnChange={false}
+              validateOnBlur={false}
+              initialValues={initialValues}
+              validationSchema={validationSchema}
+              onSubmit={onSubmit}
+              component={renderForm}
+            />
+          </StyledForm>
+        </Modal>
+      )}
       <ActionsBox
         title="Genres"
         buttonLabel="New Genre"
