@@ -1,5 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
+import moment from 'moment';
+import { Input } from 'antd';
+import { connect } from 'react-redux';
 import Button from '../Button';
 import { Rate } from 'antd';
 import 'antd/es/rate/style/css';
@@ -15,6 +18,19 @@ const Container = styled.div`
       align-items: center;
       display: flex;
       justify-content: space-between;
+    }
+
+    form {
+      margin-top: 20px;
+
+      p {
+        margin-bottom: 10px;
+      }
+
+      input,
+      textarea {
+        margin-bottom: 20px;
+      }
     }
 
     .rating-box {
@@ -37,6 +53,8 @@ const Container = styled.div`
 
     .reviews {
       .review {
+        margin-bottom: 20px;
+
         &__header {
           margin-bottom: 10px;
 
@@ -59,41 +77,89 @@ const Container = styled.div`
   }
 `;
 
-const Reviews = () => (
-  <Container>
-    <div className="content">
-      <div className="top-box">
-        <h2>Reviews</h2>
-        <Button lowercase padding="10px 25px" label="Write a review" />
-      </div>
-      <div className="rating-box">
-        <div>4.5/5</div>
-        <Rate allowHalf defaultValue={4.5} disabled />
-        <span>Average customer rating</span>
-      </div>
-      <div className="reviews">
-        <div className="review">
-          <div className="review__header">
-            <Rate allowHalf defaultValue={4.5} disabled />
-            <h3>Excellent!</h3>
-            <span>
-              <strong>Henry hulk </strong>
-              on
-              <strong> Dec 01, 2019</strong>
-            </span>
+const { TextArea } = Input;
+
+const Reviews = ({ average, reviews }) => {
+  const [isWritingReview, setisWritingReview] = useState(false);
+  const [reviewData, setReviewData] = useState({ heading: '', body: '', rate: 0 });
+  const { heading, body, rate } = reviewData;
+  const roundedRate =
+    Math.round((reviews.reduce((acc, review) => acc + review.rating, 0) / reviews.length) * 10) /
+    10;
+  console.log(reviews);
+
+  const handleChange = (value, field) => {
+    setReviewData({ ...reviewData, [field]: value });
+  };
+
+  const onSubmit = e => {
+    e.preventDefault();
+
+    console.log(reviewData);
+    setisWritingReview(false);
+  };
+
+  return (
+    <Container>
+      <div className="content">
+        <div className="top-box">
+          <h2>Reviews</h2>
+          <Button
+            lowercase
+            padding="10px 25px"
+            label="Write a review"
+            onClick={() => setisWritingReview(!isWritingReview)}
+          />
+        </div>
+        {isWritingReview && (
+          <form onSubmit={onSubmit}>
+            <p>Heading</p>
+            <Input
+              type="text"
+              value={heading}
+              onChange={e => handleChange(e.target.value, 'heading')}
+            />
+            <p>comment</p>
+            <TextArea rows={4} value={body} onChange={e => handleChange(e.target.value, 'body')} />
+            <div style={{ marginBottom: '20px' }}>
+              <p>Rate</p>
+              <Rate allowHalf value={rate} onChange={value => handleChange(value, 'rate')} />
+            </div>
+            <Button lowercase padding="10px 25px">
+              submit
+            </Button>
+          </form>
+        )}
+        {reviews.length === 0 ? (
+          <div>No reviews yet.</div>
+        ) : (
+          <div className="rating-box">
+            <div>{roundedRate}/5</div>
+            <Rate allowHalf value={average} disabled />
+            <span>Average customer rating</span>
           </div>
-          <div className="review__body">
-            <p>
-              The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those
-              interested. Sections 1.10.32 and 1.10.33 from "de Finibus Bonorum et Malorum" by
-              Cicero are also reproduced in their exact original form, accompanied by English
-              versions from the 1914 translation by H. Rackham.
-            </p>
-          </div>
+        )}
+        <div className="reviews">
+          {reviews.map(review => (
+            <div className="review" key={review._id}>
+              <div className="review__header">
+                <Rate allowHalf defaultValue={review.rating} disabled />
+                <h3>{review.heading}</h3>
+                <span>
+                  <strong>{review.reviewer.username}</strong>
+                  <span> - </span>
+                  <strong>{moment(review.createdAt).fromNow(true)} ago</strong>
+                </span>
+              </div>
+              <div className="review__body">
+                <p>{review.body}</p>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
-    </div>
-  </Container>
-);
+    </Container>
+  );
+};
 
-export default Reviews;
+export default connect(state => ({ reviews: state.book.bookDetails.reviews }))(Reviews);

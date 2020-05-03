@@ -1,9 +1,15 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
+import { Spin, Icon } from 'antd';
+import { connect } from 'react-redux';
 import PaginationBox from 'antd-components/pagination';
 import { Link } from 'react-router-dom';
-import jqueryImg from './alchemist.jpg';
 import Layout from '../Layout';
+import { GENRES_REQUEST } from 'components/dashboard/Genres/ducks';
+import { BOOKS_REQUEST } from 'components/dashboard/Books/ducks';
+import { Search } from 'antd-components/input';
+
+const pageSize = 6;
 
 const StyledContent = styled.div`
   display: flex;
@@ -26,8 +32,12 @@ const StyledContent = styled.div`
 
       input {
         border: 1px solid rgba(0, 0, 0, 0.2);
-        padding: 5px;
+        padding: 20px;
         width: 100%;
+      }
+
+      .ant-input-suffix {
+        font-size: 18px;
       }
     }
 
@@ -44,6 +54,10 @@ const StyledContent = styled.div`
           &:hover {
             color: #1890ff;
           }
+        }
+
+        .active {
+          color: #1890ff;
         }
       }
     }
@@ -151,51 +165,99 @@ const StyledContent = styled.div`
   }
 `;
 
-const Shop = () => {
+const Shop = ({ genreStore, dispatch, bookStore }) => {
+  const [genreId, setGenreId] = useState(null);
+  const [searchValue, setSearchValue] = useState('');
+  const [page, setPage] = useState(1);
+  const { genres } = genreStore;
+  const { books, isWaitingBooks } = bookStore;
+
+  useEffect(() => {
+    dispatch({ type: GENRES_REQUEST });
+    dispatch({ type: BOOKS_REQUEST, payload: { size: pageSize, page: 1 } });
+  }, [dispatch]);
+
+  const handlesearch = (value, id = null) => {
+    setSearchValue(value);
+    setPage(1);
+    dispatch({
+      type: BOOKS_REQUEST,
+      payload: { size: pageSize, page: 1, searchValue: value, genreId: id },
+    });
+  };
+
+  const onChooseCategory = id => {
+    setGenreId(id);
+    handlesearch(searchValue, id);
+  };
+
   return (
     <Layout pages={['Home', 'Shop']}>
       <StyledContent>
         <div className="filter-box">
           <div>
             <h2>Search</h2>
-            <input type="text" placeholder="Search books" />
+            <Search placeholder="search" onSearch={value => handlesearch(value, genreId)} />
           </div>
           <div>
             <h2>Categories</h2>
             <ul>
-              <li>Biography</li>
-              <li>Adventure</li>
-              <li>Children</li>
-              <li>Cook</li>
+              <li onClick={() => onChooseCategory(null)}>All</li>
+              {genres.map(genre => (
+                <li onClick={() => onChooseCategory(genre._id)} key={genre._id}>
+                  {genre.name}
+                </li>
+              ))}
             </ul>
           </div>
         </div>
-        <div className="books-box">
-          <div className="books">
-            {[1, 2, 3, 4, 5, 6, 7].map((item, index) => (
-              <div className="wrapper" key={index}>
-                <div className="item">
-                  <div className="item__image-box">
-                    <a href="/shop/Eassy way to learn JQuery">
-                      <img src={jqueryImg} alt="img" />
-                    </a>
-                    <div className="actions">
-                      <Link to="/shop/The Alchemist">View</Link>
+        {isWaitingBooks ? (
+          <div style={{ margin: '15px auto' }}>
+            <Spin indicator={<Icon type="loading" style={{ fontSize: 24 }} spin />} />
+          </div>
+        ) : (
+          <div className="books-box">
+            <div className="books">
+              {books.data.map(book => {
+                const { _id, price, title, imageUrl } = book;
+                return (
+                  <div className="wrapper" key={_id}>
+                    <div className="item">
+                      <div className="item__image-box">
+                        <a href={`/shop/${title}`}>
+                          <img src={imageUrl} alt="img" />
+                        </a>
+                        <div className="actions">
+                          <Link to={`/shop/${title}`}>View</Link>
+                        </div>
+                      </div>
+                      <div className="item__content">
+                        <Link to={`/shop/${title}`}>{title}</Link>
+                        <p>{price}$</p>
+                      </div>
                     </div>
                   </div>
-                  <div className="item__content">
-                    <a href="/shop/The Alchemist">The Alchemist</a>
-                    <p>35$</p>
-                  </div>
-                </div>
-              </div>
-            ))}
+                );
+              })}
+            </div>
+            {books.total > 0 && (
+              <PaginationBox
+                pageSize={pageSize}
+                total={books.total}
+                onChange={page => {
+                  setPage(page);
+                  dispatch({
+                    type: BOOKS_REQUEST,
+                    payload: { size: pageSize, page, searchValue, genreId },
+                  });
+                }}
+              />
+            )}
           </div>
-          <PaginationBox pageSize={3} total={15} onChange={page => console.log(page)} />
-        </div>
+        )}
       </StyledContent>
     </Layout>
   );
 };
 
-export default Shop;
+export default connect(state => ({ genreStore: state.genre, bookStore: state.book }))(Shop);

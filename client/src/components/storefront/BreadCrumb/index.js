@@ -50,7 +50,6 @@ const StyledImage = styled.div`
 `;
 
 const BreadCrumb = ({ pages }) => {
-  console.log(pages);
   if (!pages) return null;
   return (
     <StyledImage>

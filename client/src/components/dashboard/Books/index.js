@@ -13,7 +13,7 @@ import { createAction } from 'dorothy/utils';
 import FormModal from './FormModal';
 import ExpandedRow from './ExpandedRow';
 
-const pageSize = process.env.REACT_APP_PAGE_SIZE;
+const pageSize = 5;
 
 const StyledContent = styled.div`
   padding: 50px 100px;
@@ -28,6 +28,7 @@ const Books = ({ bookStore, dispatch }) => {
   const [page, setPage] = useState(1);
   const [isModalOpen, setModalOpen] = useState(false);
   const [expandedRowKeys, setExpandedRowKeys] = useState([]);
+  const [searchValue, setSearchValue] = useState('');
 
   const { books, isWaitingBooks } = bookStore;
   const { total, data } = books;
@@ -38,6 +39,7 @@ const Books = ({ bookStore, dispatch }) => {
 
   const handleSearch = value => {
     setPage(1);
+    setSearchValue(value);
     dispatch(createAction(BOOKS_REQUEST, { page: 1, size: pageSize, searchValue: value }));
   };
 
@@ -157,7 +159,7 @@ const Books = ({ bookStore, dispatch }) => {
         current={page}
         onChange={page => {
           setPage(page);
-          dispatch(createAction(BOOKS_REQUEST, { page, size: pageSize }));
+          dispatch(createAction(BOOKS_REQUEST, { page, size: pageSize, searchValue }));
         }}
       />
       {isModalOpen && (

@@ -35,7 +35,7 @@ const BookSchema = new Schema(
       ref: 'Genre',
     },
   },
-  { versionKey: false },
+  { versionKey: false, toJSON: { virtuals: true } },
 );
 
 BookSchema.post('save', async function (book, next) {
@@ -43,11 +43,11 @@ BookSchema.post('save', async function (book, next) {
   next();
 });
 
-// BookSchema.virtual('reviews', {
-//   ref: 'Review',
-//   localField: '_id',
-//   foreignField: 'bookId',
-// });
+BookSchema.virtual('reviews', {
+  ref: 'Review',
+  localField: '_id',
+  foreignField: 'bookId',
+});
 
 const Book = mongoose.model('Book', BookSchema);
 

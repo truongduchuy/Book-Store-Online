@@ -14,7 +14,8 @@ router.get('/:id', async (req, res) => {
         select: 'username',
       })
       .skip((page - 1) * size)
-      .limit(Number(size));
+      .limit(Number(size))
+      .sort({ createdAt: -1 });
 
     res.send({ total, reviews, bookId: req.params.id });
   } catch (e) {

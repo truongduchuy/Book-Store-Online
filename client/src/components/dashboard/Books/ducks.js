@@ -19,14 +19,25 @@ export const REVIEWS_RESPONSE = 'REVIEWS_RESPONSE';
 export const REVIEW_DELETE_REQUEST = 'REVIEW_DELETE_REQUEST';
 export const REVIEW_DELETE_RESPONSE = 'REVIEW_DELETE_RESPONSE';
 
+export const BOOK_DETAILS_REQUEST = 'BOOK_DETAILS_REQUEST';
+export const BOOK_DETAILS_RESPONSE = 'BOOK_DETAILS_RESPONSE';
+
+export const REVIEW_CREATE_REQUEST = 'REVIEW_CREATE_REQUEST';
+export const REVIEW_CREATE_RESPONSE = 'REVIEW_CREATE_RESPONSE';
+
 export const REQUEST_ERROR = 'REQUEST_ERROR';
 
 function* requestBooks(action) {
   try {
-    const { page, size, searchValue } = action.payload;
-    const search = searchValue ? `&searchValue=${searchValue}` : '';
+    const { page, size, searchValue, genreId } = action.payload;
+    const search = searchValue ? `searchValue=${searchValue}` : '';
+    const genre = genreId ? `genreId=${genreId}` : '';
 
-    const response = yield call(callApi, 'GET', `/api/books?page=${page}&size=${size}${search}`);
+    const response = yield call(
+      callApi,
+      'GET',
+      `/api/books?page=${page}&size=${size}&${search}&${genre}`,
+    );
 
     if (response) yield put(createAction(BOOKS_RESPONSE, response));
   } catch (error) {
@@ -139,6 +150,37 @@ function* watchDeleteReview() {
   yield takeLatest(REVIEW_DELETE_REQUEST, deleteReview);
 }
 
+function* requestBookDetails(action) {
+  try {
+    const response = yield call(callApi, 'GET', `/api/books/${action.payload}`);
+
+    if (response) yield put(createAction(BOOK_DETAILS_RESPONSE, response));
+  } catch (error) {
+    console.log(error);
+    yield put(createAction(REQUEST_ERROR));
+  }
+}
+
+function* watchBookDetailsRequest() {
+  yield takeLatest(BOOK_DETAILS_REQUEST, requestBookDetails);
+}
+
+function* createReviewRequest(action) {
+  try {
+    console.log('action.payload', action.payload);
+    const response = yield call(callApi, 'POST', `/api/reviews`, action.payload);
+    console.log('response', response);
+    if (response) yield put(createAction(REVIEW_CREATE_RESPONSE, response));
+  } catch (error) {
+    console.log(error);
+    yield put(createAction(REQUEST_ERROR));
+  }
+}
+
+function* watchCreateReviewRequest() {
+  yield takeLatest(REVIEW_CREATE_REQUEST, createReviewRequest);
+}
+
 const initBook = {
   books: { total: 0, data: [] },
   reviewData: [],
@@ -146,6 +188,7 @@ const initBook = {
   isWaitingAdd: false,
   isWaitingUpdate: false,
   isWaitingReviews: false,
+  bookDetails: {},
 };
 
 const bookActionHandlers = {
@@ -227,6 +270,21 @@ const bookActionHandlers = {
       ),
     };
   },
+  [BOOK_DETAILS_RESPONSE]: (state, action) => {
+    return {
+      ...state,
+      bookDetails: action.payload,
+    };
+  },
+  [REVIEW_CREATE_RESPONSE]: (state, action) => {
+    return {
+      ...state,
+      bookDetails: {
+        ...state.bookDetails,
+        reviews: [...state.bookDetails.reviews, action.payload],
+      },
+    };
+  },
   [REQUEST_ERROR]: state => ({
     ...state,
     isWaitingBooks: false,
@@ -244,4 +302,6 @@ export const bookSagas = [
   fork(watchUpdateBook),
   fork(watchRequestReviews),
   fork(watchDeleteReview),
+  fork(watchBookDetailsRequest),
+  fork(watchCreateReviewRequest),
 ];

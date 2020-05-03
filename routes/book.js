@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Book = require('../models/book');
+const Review = require('../models/review');
 const upload = require('../config/multer');
 const cloudinary = require('cloudinary').v2;
 const isOperationValid = require('./utils/checkOperationValid');
@@ -29,6 +30,28 @@ router.get('/', async (req, res) => {
       total,
       data: books,
     });
+  } catch (e) {
+    console.log(e.message);
+    res.status(500).send({ error: 'get books failed!' });
+  }
+});
+
+router.get('/:title', async (req, res) => {
+  try {
+    const { title } = req.params;
+
+    const book = await Book.findOne({ title }).populate({
+      path: 'reviews',
+      options: {
+        sort: { createdAt: -1 },
+      },
+      populate: {
+        path: 'reviewer',
+        select: 'username',
+      },
+    });
+
+    res.send(book);
   } catch (e) {
     console.log(e.message);
     res.status(500).send({ error: 'get books failed!' });

@@ -1,11 +1,13 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { connect } from 'react-redux';
+import { Spin, Icon } from 'antd';
 import styled from 'styled-components';
 import { Rate } from 'antd';
 import 'antd/es/rate/style/css';
-import jqueryBook from './alchemist.jpg';
 import Reviews from './Reviews';
 import Button from '../Button';
 import Layout from '../Layout';
+import { BOOK_DETAILS_REQUEST } from 'components/dashboard/Books/ducks';
 
 const StyledContent = styled.div`
   .details {
@@ -84,42 +86,65 @@ const StyledContent = styled.div`
   }
 `;
 
-const ProductDetails = ({ match }) => {
-  console.log(match.params.name);
+const calcAverageReview = reviews => {
+  const average = reviews?.reduce((acc, review) => acc + review.rating, 0) / reviews?.length;
+  //roundoff number to nearest 0.5
+  return Math.round(average * 2) / 2;
+};
+
+const ProductDetails = ({ match, dispatch, bookDetails }) => {
+  const [num, setNum] = useState(1);
+  const title = match.params.name;
+  const { price, description, imageUrl, reviews, quantity } = bookDetails;
+  const average = calcAverageReview(reviews) || 0;
+
+  useEffect(() => {
+    dispatch({ type: BOOK_DETAILS_REQUEST, payload: title });
+  }, [dispatch, title]);
+
+  const handleChangeQuantity = value => {
+    if (value > 0 && value <= quantity) setNum(value);
+  };
+
+  if (!reviews)
+    return (
+      <div style={{ margin: '15px auto' }}>
+        <Spin indicator={<Icon type="loading" style={{ fontSize: 24 }} spin />} />
+      </div>
+    );
+
   return (
-    <Layout pages={['Home', 'Shop', match.params.name]}>
+    <Layout pages={['Home', 'Shop', title]}>
       <StyledContent>
         <div className="details">
           <div className="details__image-box">
             <div>
-              <img src={jqueryBook} alt="img" />
+              <img src={imageUrl} alt="img" />
             </div>
           </div>
           <div className="details__image-content">
-            <h2>{match.params.name}</h2>
+            <h2>{title}</h2>
             <div className="review">
-              <Rate allowHalf defaultValue={4.5} disabled />
-              <span>1 review</span>
+              <Rate allowHalf value={average} disabled />
+              <span>
+                {reviews?.length} {reviews?.length > 1 ? 'reviews' : 'review'}
+              </span>
             </div>
-            <p>35$</p>
-            <p>
-              Every few decades a book is published that changes the lives of its readers forever.
-              This is such a book - a magical fable about learning to listen to your heart, read the
-              omens strewn along life’s path and, above, all follow your dreams.
-            </p>
+            <p>{price}$</p>
+            <p>{description}</p>
             <div className="actions">
               <p>quantity:</p>
-              <span>-</span>
-              <span>1</span>
-              <span>+</span>
+              <span onClick={() => handleChangeQuantity(num - 1)}>-</span>
+              <span>{num}</span>
+              <span onClick={() => handleChangeQuantity(num + 1)}>+</span>
             </div>
-            <Button label="Add to cart" />
+            {quantity > 0 && <Button label="Add to cart" />}
           </div>
         </div>
-        <Reviews />
+        <Reviews average={average} />
       </StyledContent>
     </Layout>
   );
 };
 
-export default ProductDetails;
+export default connect(state => ({ bookDetails: state.book.bookDetails }))(ProductDetails);

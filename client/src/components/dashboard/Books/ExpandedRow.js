@@ -14,7 +14,7 @@ const ExpandedRow = ({ bookId, review, dispatch, isWaitingReviews }) => {
 
   useEffect(() => {
     dispatch({ type: REVIEWS_REQUEST, payload: { id: bookId, size: pageSize, page: 1 } });
-  }, [dispatch]);
+  }, [dispatch, bookId]);
 
   const columns = [
     {
@@ -42,7 +42,7 @@ const ExpandedRow = ({ bookId, review, dispatch, isWaitingReviews }) => {
     {
       title: 'Reviewed Date',
       dataIndex: 'createdAt',
-      render: data => <span>{moment(data).format('YYYY/MM/DD HH:mm:ss')}</span>,
+      render: data => <span>{moment(data).format('YYYY/MM/DD - HH:mm')}</span>,
     },
     {
       title: 'Operation',
