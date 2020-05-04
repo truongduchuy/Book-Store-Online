@@ -22,12 +22,18 @@ const cartActionHandlers = {
   [ADD_TO_CART]: (state, action) => {
     let cart = [];
     const bookisNotExistedInCart = state.cart.every(item => item._id !== action.payload._id);
-    if (!bookisNotExistedInCart) {
-      cart = state.cart.map(item =>
-        item._id === action.payload._id ? { ...item, quantity: item.quantity + 1 } : item,
-      );
-    } else {
+
+    if (bookisNotExistedInCart) {
       cart = [...state.cart, { _id: action.payload._id, book: action.payload, quantity: 1 }];
+    } else {
+      const bookInCart = state.cart.find(({ _id }) => _id === action.payload._id);
+      if (bookInCart?.quantity < action.payload.quantity)
+        cart = state.cart.map(item =>
+          item._id === action.payload._id ? { ...item, quantity: Number(item.quantity) + 1 } : item,
+        );
+      else {
+        cart = state.cart;
+      }
     }
     setItem('cart', cart);
 
