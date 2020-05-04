@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import store from 'store';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import Books from 'components/dashboard/Books';
 import Authors from 'components/dashboard/Authors';
@@ -12,8 +13,13 @@ import Register from 'components/storefront/Register';
 import ProductDetails from 'components/storefront/ProductDetails';
 import ScrollToTop from './components/storefront/ScrollToTop';
 import Cart from './components/storefront/Cart';
+import { GET_CART } from './components/storefront/Cart/ducks';
 
-const App = () => {
+const App = ({ dispatch }) => {
+  useEffect(() => {
+    const cart = localStorage.getItem('cart');
+    store.dispatch({ type: GET_CART, payload: JSON.parse(cart) || [] });
+  }, [dispatch]);
   return (
     <BrowserRouter>
       <ScrollToTop />

@@ -8,6 +8,7 @@ import Reviews from './Reviews';
 import Button from '../Button';
 import Layout from '../Layout';
 import { BOOK_DETAILS_REQUEST } from 'components/dashboard/Books/ducks';
+import { ADD_TO_CART } from 'components/storefront/Cart/ducks';
 
 const StyledContent = styled.div`
   .details {
@@ -138,7 +139,12 @@ const ProductDetails = ({ match, dispatch, bookDetails }) => {
               <span>{num}</span>
               <span onClick={() => handleChangeQuantity(num + 1)}>+</span>
             </div>
-            {quantity > 0 && <Button label="Add to cart" />}
+            {quantity > 0 && (
+              <Button
+                label="Add to cart"
+                onClick={() => dispatch({ type: ADD_TO_CART, payload: bookDetails })}
+              />
+            )}
           </div>
         </div>
         <Reviews average={average} />

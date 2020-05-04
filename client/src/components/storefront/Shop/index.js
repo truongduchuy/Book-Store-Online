@@ -54,10 +54,10 @@ const StyledContent = styled.div`
           &:hover {
             color: #1890ff;
           }
-        }
 
-        .active {
-          color: #1890ff;
+          &.active {
+            color: #1890ff;
+          }
         }
       }
     }
@@ -202,9 +202,15 @@ const Shop = ({ genreStore, dispatch, bookStore }) => {
           <div>
             <h2>Categories</h2>
             <ul>
-              <li onClick={() => onChooseCategory(null)}>All</li>
+              <li className={!genreId ? 'active' : null} onClick={() => onChooseCategory(null)}>
+                All
+              </li>
               {genres.map(genre => (
-                <li onClick={() => onChooseCategory(genre._id)} key={genre._id}>
+                <li
+                  className={genre._id === genreId ? 'active' : null}
+                  onClick={() => onChooseCategory(genre._id)}
+                  key={genre._id}
+                >
                   {genre.name}
                 </li>
               ))}
@@ -244,6 +250,7 @@ const Shop = ({ genreStore, dispatch, bookStore }) => {
               <PaginationBox
                 pageSize={pageSize}
                 total={books.total}
+                current={page}
                 onChange={page => {
                   setPage(page);
                   dispatch({

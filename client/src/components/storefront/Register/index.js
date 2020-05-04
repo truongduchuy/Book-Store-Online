@@ -10,17 +10,21 @@ import { StyledForm } from '../Login';
 
 const validationSchema = object().shape({
   username: string().required(),
-  phoneNumber: string().required('Phone mumber is a required field'),
+  phoneNumber: string().required(),
   address: string().required(),
   email: string().required().email('Email is invalid'),
   password: string().required(),
+  confirmPass: string().required(),
 });
 
 const Login = () => {
   const initialValues = {
-    name: '',
+    username: '',
+    phoneNumber: '',
+    address: '',
     email: '',
     password: '',
+    confirmPass: '',
   };
 
   const renderForm = ({ handleSubmit, ...form }) => (
@@ -29,6 +33,13 @@ const Login = () => {
       <Field form={form} name="username" label="Username" component={Input} />
       <Field form={form} name="email" label="Email" component={Input} />
       <Field form={form} name="password" label="Password" type="password" component={Input} />
+      <Field
+        form={form}
+        name="confirmPass"
+        label="Confirm Password"
+        type="password"
+        component={Input}
+      />
       <Field form={form} name="phoneNumber" label="Phone Number" component={Input} />
       <Field form={form} name="address" label="Address" component={Input} />
       <div>
@@ -40,7 +51,7 @@ const Login = () => {
     </Form>
   );
 
-  const onLogin = values => {
+  const handleRegister = values => {
     console.log(values);
   };
 
@@ -51,7 +62,7 @@ const Login = () => {
         validateOnBlur={false}
         initialValues={initialValues}
         validationSchema={validationSchema}
-        onSubmit={onLogin}
+        onSubmit={handleRegister}
         component={renderForm}
       />
       <Link to="/">

@@ -1,9 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
+import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import cart from './shopping.gif';
 
-const Cart = styled(Link)`
+const StyledCart = styled(Link)`
   display: flex;
   align-items: center;
   cursor: pointer;
@@ -20,9 +21,13 @@ const Cart = styled(Link)`
   }
 `;
 
-export default ({ quantity }) => (
-  <Cart to="/shop/cart">
+const Cart = ({ numOfBooks }) => (
+  <StyledCart to="/shop/cart">
     <img src={cart} alt="cart" />
-    <span>{quantity}</span>
-  </Cart>
+    <span>{numOfBooks}</span>
+  </StyledCart>
 );
+
+export default connect(state => ({
+  numOfBooks: state.cart.cart.reduce((acc, item) => acc + Number(item.quantity), 0),
+}))(Cart);

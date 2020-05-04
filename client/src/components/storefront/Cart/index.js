@@ -1,9 +1,11 @@
 import React from 'react';
 import { Icon } from 'antd';
+import { connect } from 'react-redux';
 import styled from 'styled-components';
+import { Link } from 'react-router-dom';
 import Layout from '../Layout';
-import AlchemistImg from './alchemist.jpg';
 import CardCheckout from './CartCheckout';
+import { REMOVE_ITEM, UPDATE_CART } from './ducks';
 
 const StyledContent = styled.div`
   padding: 100px 70px;
@@ -11,7 +13,7 @@ const StyledContent = styled.div`
 
   table {
     width: 100%;
-    margin-bottom: 20px;
+    margin-bottom: 50px;
 
     thead tr th,
     tbody tr td {
@@ -105,7 +107,7 @@ const StyledContent = styled.div`
         }
 
         &__title::before {
-          content: 'Product';
+          content: 'Title';
         }
 
         &__price::before {
@@ -124,48 +126,70 @@ const StyledContent = styled.div`
   }
 `;
 
-const Cart = () => {
+const Cart = ({ cart, dispatch, total }) => {
+  console.log('cart', cart);
   return (
     <Layout pages={['Home', 'Shop', 'cart']}>
       <StyledContent>
-        <table>
-          <thead>
-            <tr>
-              <th>&nbsp;</th>
-              <th>&nbsp;</th>
-              <th>Product</th>
-              <th>Price</th>
-              <th>Quantity</th>
-              <th>Subtotal</th>
-            </tr>
-          </thead>
-          <tbody>
-            {[1, 2].map((item, index) => (
-              <tr key={index} className="product">
-                <td className="product__remove">
-                  <div>
-                    <Icon type="delete" />
-                  </div>
-                </td>
-                <td className="product__image">
-                  <a href="###">
-                    <img src={AlchemistImg} alt="book" />
-                  </a>
-                </td>
-                <td className="product__title">The Alchemist</td>
-                <td className="product__price">$35</td>
-                <td className="product__quantity">
-                  <input type="number" />
-                </td>
-                <td className="product__subtotal">$35</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-        <CardCheckout />
+        {cart.length > 0 ? (
+          <>
+            <table>
+              <thead>
+                <tr>
+                  <th>&nbsp;</th>
+                  <th>&nbsp;</th>
+                  <th>Title</th>
+                  <th>Price</th>
+                  <th>Quantity</th>
+                  <th>Subtotal</th>
+                </tr>
+              </thead>
+              <tbody>
+                {cart?.map(({ book, quantity, _id }, index) => (
+                  <tr key={_id} className="product">
+                    <td className="product__remove">
+                      <div onClick={() => dispatch({ type: REMOVE_ITEM, payload: _id })}>
+                        <Icon type="delete" />
+                      </div>
+                    </td>
+                    <td className="product__image">
+                      <Link to={`/shop/${book.title}`}>
+                        <img src={book.imageUrl} alt="book" />
+                      </Link>
+                    </td>
+                    <td className="product__title">{book.title}</td>
+                    <td className="product__price">${book.price}</td>
+                    <td className="product__quantity">
+                      <input
+                        type="number"
+                        value={quantity}
+                        onChange={e =>
+                          dispatch({
+                            type: UPDATE_CART,
+                            payload: {
+                              quantity: e.target.value,
+                              _id,
+                            },
+                          })
+                        }
+                      />
+                    </td>
+                    <td className="product__subtotal">${book.price * quantity}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            <CardCheckout total={total} />
+          </>
+        ) : (
+          <div style={{ textAlign: 'center' }}>Your cart is currently empty.</div>
+        )}
       </StyledContent>
     </Layout>
   );
 };
 
-export default Cart;
+export default connect(state => ({
+  cart: state.cart.cart,
+  total: state.cart.cart.reduce((acc, { book, quantity }) => acc + book.price * quantity, 0),
+}))(Cart);

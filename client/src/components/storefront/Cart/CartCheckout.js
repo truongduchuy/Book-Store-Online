@@ -29,7 +29,7 @@ const StyledCard = styled.div`
   }
 `;
 
-const Cart = () => {
+const Cart = ({ total }) => {
   const [isLogined, setlogined] = useState(false);
   return (
     <StyledCard>
@@ -37,12 +37,12 @@ const Cart = () => {
         <h3>Cart Totals</h3>
         <div>
           <p>Total:</p>
-          <p>$35</p>
+          <p>${total}</p>
         </div>
         {!isLogined ? (
           <PayPalButton
             shippingPreference="NO_SHIPPING"
-            amount={30}
+            amount={total}
             style={{
               layout: 'horizontal',
               label: 'pay',

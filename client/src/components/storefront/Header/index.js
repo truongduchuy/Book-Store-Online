@@ -143,7 +143,7 @@ const Books = () => {
       <div className="header">
         <div className="header__logo">
           <div className="cart">
-            <Cart quantity={0} />
+            <Cart />
           </div>
           <NavLink to="/" className="logo">
             Book Store
@@ -169,7 +169,7 @@ const Books = () => {
           </li>
           <li>
             <div className="cart">
-              <Cart quantity={0} />
+              <Cart />
             </div>
           </li>
         </ul>
