@@ -20,20 +20,18 @@ const initCart = {
 
 const cartActionHandlers = {
   [ADD_TO_CART]: (state, action) => {
+    const { quantityAdded, book } = action.payload;
     let cart = [];
-    const bookisNotExistedInCart = state.cart.every(item => item._id !== action.payload._id);
+    const bookisNotExistedInCart = state.cart.every(item => item._id !== book._id);
 
     if (bookisNotExistedInCart) {
-      cart = [...state.cart, { _id: action.payload._id, book: action.payload, quantity: 1 }];
+      cart = [...state.cart, { _id: book._id, book, quantity: quantityAdded }];
     } else {
-      const bookInCart = state.cart.find(({ _id }) => _id === action.payload._id);
-      if (bookInCart?.quantity < action.payload.quantity)
-        cart = state.cart.map(item =>
-          item._id === action.payload._id ? { ...item, quantity: Number(item.quantity) + 1 } : item,
-        );
-      else {
-        cart = state.cart;
-      }
+      cart = state.cart.map(item =>
+        item._id === book._id
+          ? { ...item, quantity: Number(item.quantity) + Number(quantityAdded) }
+          : item,
+      );
     }
     setItem('cart', cart);
 

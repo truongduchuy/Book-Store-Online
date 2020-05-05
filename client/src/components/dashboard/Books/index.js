@@ -81,9 +81,9 @@ const Books = ({ bookStore, dispatch }) => {
       Title: '',
       dataIndex: 'imageUrl',
       render: (text, record) => (
-        <div>
+        <a href={`/shop/${record.title}`} target="_blank" rel="noopener noreferrer">
           <img style={{ maxWidth: '100px' }} src={record.imageUrl} alt={record.title} />
-        </div>
+        </a>
       ),
     },
     {

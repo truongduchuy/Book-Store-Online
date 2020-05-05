@@ -9,6 +9,7 @@ import Button from '../Button';
 import Layout from '../Layout';
 import { BOOK_DETAILS_REQUEST } from 'components/dashboard/Books/ducks';
 import { ADD_TO_CART } from 'components/storefront/Cart/ducks';
+import Notification from 'antd-components/notification';
 
 const StyledContent = styled.div`
   .details {
@@ -93,18 +94,26 @@ const calcAverageReview = reviews => {
   return Math.round(average * 2) / 2;
 };
 
-const ProductDetails = ({ match, dispatch, bookDetails }) => {
+const ProductDetails = ({ match, dispatch, bookDetails, quantityInCart }) => {
   const [num, setNum] = useState(1);
   const title = match.params.name;
   const { price, description, imageUrl, reviews, quantity } = bookDetails;
   const average = calcAverageReview(reviews) || 0;
-
+  console.log('quantityInCart', quantityInCart);
   useEffect(() => {
     dispatch({ type: BOOK_DETAILS_REQUEST, payload: title });
   }, [dispatch, title]);
 
+  const quantityValid = (numAdded, quantityOfBook) =>
+    numAdded + Number(quantityInCart) <= quantityOfBook;
+
   const handleChangeQuantity = value => {
-    if (value > 0 && value <= quantity) setNum(value);
+    console.log('quantityValid(value, quantity)', quantityValid(value, quantity));
+    if (!quantityValid(value, quantity)) {
+      Notification.warning(`Sorry, we only have ${quantity}!`);
+    } else if (value > 0) {
+      setNum(value);
+    }
   };
 
   if (!reviews)
@@ -142,7 +151,15 @@ const ProductDetails = ({ match, dispatch, bookDetails }) => {
             {quantity > 0 && (
               <Button
                 label="Add to cart"
-                onClick={() => dispatch({ type: ADD_TO_CART, payload: bookDetails })}
+                onClick={() => {
+                  if (!quantityValid(num, quantity)) {
+                    Notification.warning(`Sorry, we only have ${quantity}!`);
+                  } else
+                    dispatch({
+                      type: ADD_TO_CART,
+                      payload: { book: bookDetails, quantityAdded: num },
+                    });
+                }}
               />
             )}
           </div>
@@ -153,4 +170,7 @@ const ProductDetails = ({ match, dispatch, bookDetails }) => {
   );
 };
 
-export default connect(state => ({ bookDetails: state.book.bookDetails }))(ProductDetails);
+export default connect(({ book, cart }) => ({
+  bookDetails: book.bookDetails,
+  quantityInCart: cart.cart.find(item => book.bookDetails._id === item._id)?.quantity || 0,
+}))(ProductDetails);

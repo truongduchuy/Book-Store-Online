@@ -25,6 +25,7 @@ const StyledHeader = styled.header`
         font-size: 22px;
         color: #7b6262;
         font-weight: lighter;
+        letter-spacing: 2px;
       }
 
       > .cart,
@@ -47,9 +48,13 @@ const StyledHeader = styled.header`
           text-transform: uppercase;
           font-weight: 600;
 
-          &:hover {
+          &:hover, &.active {
             color: #1890ff;
           }
+
+          //  {
+          //   color: #1890ff;
+          // }
         }
       }
 
@@ -146,7 +151,7 @@ const Books = () => {
             <Cart />
           </div>
           <NavLink to="/" className="logo">
-            Book Store
+            HUY TRU STORE
           </NavLink>
           <div className="burger" aria-hidden="true" onClick={() => setNavOn(!isNavOn)}>
             <div className="line"></div>
@@ -155,9 +160,9 @@ const Books = () => {
           </div>
         </div>
         <ul className="header__nav">
-          <li>
+          {/* <li>
             <NavLink to="/">Home</NavLink>
-          </li>
+          </li> */}
           <li>
             <NavLink to="/shop">Shop</NavLink>
           </li>

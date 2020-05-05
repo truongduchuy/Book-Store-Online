@@ -1,10 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import cart from './shopping.gif';
 
-const StyledCart = styled(Link)`
+const StyledCart = styled(NavLink)`
   display: flex;
   align-items: center;
   cursor: pointer;
@@ -22,7 +22,7 @@ const StyledCart = styled(Link)`
 `;
 
 const Cart = ({ numOfBooks }) => (
-  <StyledCart to="/shop/cart">
+  <StyledCart to="/cart">
     <img src={cart} alt="cart" />
     <span>{numOfBooks}</span>
   </StyledCart>

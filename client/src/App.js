@@ -28,7 +28,7 @@ const App = ({ dispatch }) => {
         <Route exact path="/login" component={Login} />
         <Route exact path="/register" component={Register} />
         <Route exact path="/shop" component={Shop} />
-        <Route exact path="/shop/cart" component={Cart} />
+        <Route exact path="/cart" component={Cart} />
         <Route exact path="/shop/:name" component={ProductDetails} />
         <Route exact path="/dashboard/login" component={DashBoardLogin} />
         <Route exact path="/dashboard/books" component={Books} />

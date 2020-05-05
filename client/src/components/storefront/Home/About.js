@@ -64,16 +64,16 @@ const About = () => {
           />
         </div>
         <div className="heading">
-          <h1>The Story of Book Store</h1>
+          <h1>The Story of Huy Tru Store</h1>
           <p>
-            Book Store is a well-renowned online store that has continually featured a variety of
+            Huy Tru Store is a well-renowned online store that has continually featured a variety of
             high-quality and affordable products since day one.
           </p>
           <br />
           <p>
             Our passion for excellence has driven us from the beginning, and continues to drive us
-            into the future. The team at Book Store knows that every product counts, and strives to
-            make the entire shopping experience as rewarding and fun as possible. Check out our
+            into the future. The team at Huy Tru Store knows that every product counts, and strives
+            to make the entire shopping experience as rewarding and fun as possible. Check out our
             store and special
           </p>
           <p>offers, and get in touch with questions or requests.</p>

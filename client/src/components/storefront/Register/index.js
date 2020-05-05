@@ -1,12 +1,12 @@
 import React from 'react';
 import { object, string } from 'yup';
 import { Formik, Form } from 'formik';
-import { Icon } from 'antd';
 import { Link } from 'react-router-dom';
 import Field from 'antd-components/field';
 import Input from 'antd-components/input';
 import Button from 'antd-components/button';
 import { StyledForm } from '../Login';
+import Layout from '../Layout';
 
 const validationSchema = object().shape({
   username: string().required(),
@@ -56,19 +56,20 @@ const Login = () => {
   };
 
   return (
-    <StyledForm style={{ width: '500px' }}>
-      <Formik
-        validateOnChange={false}
-        validateOnBlur={false}
-        initialValues={initialValues}
-        validationSchema={validationSchema}
-        onSubmit={handleRegister}
-        component={renderForm}
-      />
-      <Link to="/">
-        <Icon type="close" />
-      </Link>
-    </StyledForm>
+    <Layout pages={['Home', 'Login']}>
+      <StyledForm>
+        <div style={{ width: '500px' }}>
+          <Formik
+            validateOnChange={false}
+            validateOnBlur={false}
+            initialValues={initialValues}
+            validationSchema={validationSchema}
+            onSubmit={handleRegister}
+            component={renderForm}
+          />
+        </div>
+      </StyledForm>
+    </Layout>
   );
 };
 
