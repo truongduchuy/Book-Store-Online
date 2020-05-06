@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const Book = require('../models/book');
-const Review = require('../models/review');
 const upload = require('../config/multer');
 const cloudinary = require('cloudinary').v2;
 const isOperationValid = require('./utils/checkOperationValid');

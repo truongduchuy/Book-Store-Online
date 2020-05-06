@@ -1,7 +1,13 @@
 import React, { useState } from 'react';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
+import { Menu, Dropdown, Icon } from 'antd';
+import 'antd/es/dropdown/style/css';
+import 'antd/es/menu/style/css';
 import styled from 'styled-components';
 import { NavLink } from 'react-router-dom';
 import Cart from './Cart';
+import { LOGOUT } from '../Customer/ducks';
 
 const StyledHeader = styled.header`
   background: #fff;
@@ -45,16 +51,12 @@ const StyledHeader = styled.header`
         a {
           padding: 20px 0;
           display: inline-block;
-          text-transform: uppercase;
+          text-transform: none;
           font-weight: 600;
 
           &:hover, &.active {
             color: #1890ff;
           }
-
-          //  {
-          //   color: #1890ff;
-          // }
         }
       }
 
@@ -140,8 +142,24 @@ const StyledHeader = styled.header`
   }
 `;
 
-const Books = () => {
+const Books = ({ username, dispatch, history }) => {
   const [isNavOn, setNavOn] = useState(false);
+
+  const menu = (
+    <Menu>
+      <Menu.Item>
+        <div
+          aria-hidden="true"
+          onClick={() => {
+            dispatch({ type: LOGOUT });
+            history.push('/login');
+          }}
+        >
+          Log out
+        </div>
+      </Menu.Item>
+    </Menu>
+  );
 
   return (
     <StyledHeader isNavOn={isNavOn}>
@@ -169,9 +187,19 @@ const Books = () => {
           <li>
             <NavLink to="/register">Register</NavLink>
           </li>
-          <li>
-            <NavLink to="/login">Log In</NavLink>
-          </li>
+          {!username ? (
+            <li>
+              <NavLink to="/login">Log In</NavLink>
+            </li>
+          ) : (
+            <li>
+              <Dropdown overlay={menu}>
+                <NavLink to="/customer" className="ant-dropdown-link" style={{ padding: 0 }}>
+                  <span style={{ textTransform: 'none' }}>huytruong</span> <Icon type="down" />
+                </NavLink>
+              </Dropdown>
+            </li>
+          )}
           <li>
             <div className="cart">
               <Cart />
@@ -183,4 +211,6 @@ const Books = () => {
   );
 };
 
-export default Books;
+export default connect(state => ({
+  username: state.customer.customer?.username,
+}))(withRouter(Books));

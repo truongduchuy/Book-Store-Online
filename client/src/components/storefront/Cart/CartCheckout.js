@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
+import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { PayPalButton } from 'react-paypal-button-v2';
 import { Link } from 'react-router-dom';
@@ -29,8 +30,8 @@ const StyledCard = styled.div`
   }
 `;
 
-const Cart = ({ total }) => {
-  const [isLogined, setlogined] = useState(false);
+const Cart = ({ total, isLogined }) => {
+  console.log(isLogined);
   return (
     <StyledCard>
       <div>
@@ -39,7 +40,7 @@ const Cart = ({ total }) => {
           <p>Total:</p>
           <p>${total}</p>
         </div>
-        {!isLogined ? (
+        {isLogined ? (
           <PayPalButton
             shippingPreference="NO_SHIPPING"
             amount={total}
@@ -61,4 +62,4 @@ const Cart = ({ total }) => {
     </StyledCard>
   );
 };
-export default Cart;
+export default connect(state => ({ ...state, isLogined: state.customer.token }))(Cart);

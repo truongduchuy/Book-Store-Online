@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
 const { Schema } = mongoose;
+const bcrypt = require('bcryptjs');
 
 const CustomerSchema = new Schema(
   {
@@ -39,6 +40,25 @@ const CustomerSchema = new Schema(
   },
   { versionKey: false },
 );
+
+CustomerSchema.virtual('orders', {
+  ref: 'Order',
+  localField: '_id',
+  foreignField: 'customer',
+});
+
+// schema method
+CustomerSchema.statics.findByCredentials = async (email, password) => {
+  const customer = await Customer.findOne({ email });
+
+  if (!customer) throw new Error('Unable to login');
+
+  const isMatch = await bcrypt.compare(password, customer.password);
+
+  if (!isMatch) throw new Error('Unable to login');
+
+  return customer;
+};
 
 const Customer = mongoose.model('Customer', CustomerSchema);
 

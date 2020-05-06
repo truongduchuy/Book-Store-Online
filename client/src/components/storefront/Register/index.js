@@ -1,23 +1,28 @@
 import React from 'react';
+import { useDispatch } from 'react-redux';
 import { object, string } from 'yup';
 import { Formik, Form } from 'formik';
 import { Link } from 'react-router-dom';
 import Field from 'antd-components/field';
 import Input from 'antd-components/input';
 import Button from 'antd-components/button';
+import Notification from 'antd-components/notification';
 import { StyledForm } from '../Login';
 import Layout from '../Layout';
+import { REGISTATION_REQUEST } from '../Customer/ducks';
 
 const validationSchema = object().shape({
   username: string().required(),
   phoneNumber: string().required(),
   address: string().required(),
   email: string().required().email('Email is invalid'),
-  password: string().required(),
-  confirmPass: string().required(),
+  password: string().required().min(6),
+  confirmPass: string().required().min(6),
 });
 
-const Login = () => {
+const Register = ({ history }) => {
+  const dispatch = useDispatch();
+  console.log(dispatch);
   const initialValues = {
     username: '',
     phoneNumber: '',
@@ -52,11 +57,25 @@ const Login = () => {
   );
 
   const handleRegister = values => {
-    console.log(values);
+    const { password, confirmPass } = values;
+    if (password !== confirmPass) Notification.error('Confirm password is not exact!');
+    else {
+      dispatch({
+        type: REGISTATION_REQUEST,
+        payload: {
+          history,
+          ...values,
+          callBack: success => {
+            if (success) Notification.success('Registered Successfully!');
+            else Notification.error('Registation Failed!');
+          },
+        },
+      });
+    }
   };
 
   return (
-    <Layout pages={['Home', 'Login']}>
+    <Layout pages={['Home', 'Register']}>
       <StyledForm>
         <div style={{ width: '500px' }}>
           <Formik
@@ -73,4 +92,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Register;

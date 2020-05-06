@@ -1,6 +1,9 @@
 const express = require('express');
 const Customer = require('../models/customer');
 const Order = require('../models/order');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+
 const router = express.Router();
 
 const mockCustomer = {
@@ -59,12 +62,31 @@ router.get('/', async (req, res) => {
 router.post('/register', async (req, res) => {
   try {
     const newCustomer = new Customer(req.body);
+
+    newCustomer.password = await bcrypt.hash(newCustomer.password, 8);
+
     await newCustomer.save();
 
     res.send(newCustomer);
   } catch (e) {
     console.log(e.message);
     res.status(500).send();
+  }
+});
+
+router.post('/login', async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    if (!email || !password) res.status(403).send();
+
+    const customer = await Customer.findByCredentials(email, password);
+    const token = jwt.sign({ _id: customer._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+
+    res.send({ customer, token });
+  } catch (e) {
+    console.log(e.message);
+    res.status(500).send(e);
   }
 });
 

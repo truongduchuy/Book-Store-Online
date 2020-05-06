@@ -1,4 +1,5 @@
 import React from 'react';
+import { useDispatch } from 'react-redux';
 import { object, string } from 'yup';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
@@ -7,6 +8,8 @@ import Layout from '../Layout';
 import Field from 'antd-components/field';
 import Input from 'antd-components/input';
 import Button from 'antd-components/button';
+import { LOGIN_REQUEST } from '../Customer/ducks';
+import Notification from 'antd-components/notification';
 
 export const StyledForm = styled.div`
   padding: 70px 0;
@@ -38,10 +41,11 @@ export const StyledForm = styled.div`
 
 const validationSchema = object().shape({
   email: string().required().email('Email is invalid'),
-  password: string().required(),
+  password: string().required().min(6),
 });
 
-const Login = () => {
+const Login = ({ history }) => {
+  const dispatch = useDispatch();
   const initialValues = {
     email: '',
     password: '',
@@ -63,6 +67,17 @@ const Login = () => {
 
   const onLogin = values => {
     console.log(values);
+    dispatch({
+      type: LOGIN_REQUEST,
+      payload: {
+        ...values,
+        history,
+        callBack: success => {
+          if (success) Notification.success('Logined successfully!');
+          else Notification.error('Email or password is incorrect!');
+        },
+      },
+    });
   };
 
   return (
