@@ -178,24 +178,23 @@ const Books = ({ username, dispatch, history }) => {
           </div>
         </div>
         <ul className="header__nav">
-          {/* <li>
-            <NavLink to="/">Home</NavLink>
-          </li> */}
           <li>
             <NavLink to="/shop">Shop</NavLink>
           </li>
-          <li>
-            <NavLink to="/register">Register</NavLink>
-          </li>
           {!username ? (
-            <li>
-              <NavLink to="/login">Log In</NavLink>
-            </li>
+            <>
+              <li>
+                <NavLink to="/login">Log In</NavLink>
+              </li>
+              <li>
+                <NavLink to="/register">Register</NavLink>
+              </li>
+            </>
           ) : (
             <li>
               <Dropdown overlay={menu}>
                 <NavLink to="/customer" className="ant-dropdown-link" style={{ padding: 0 }}>
-                  <span style={{ textTransform: 'none' }}>huytruong</span> <Icon type="down" />
+                  <span style={{ textTransform: 'none' }}>{username}</span> <Icon type="down" />
                 </NavLink>
               </Dropdown>
             </li>

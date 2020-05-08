@@ -2,7 +2,9 @@ import React from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { PayPalButton } from 'react-paypal-button-v2';
+import { withRouter } from 'react-router-dom';
 import { Link } from 'react-router-dom';
+import { ORDER_REQUEST } from './ducks';
 
 const StyledCard = styled.div`
   display: flex;
@@ -30,8 +32,9 @@ const StyledCard = styled.div`
   }
 `;
 
-const Cart = ({ total, isLogined }) => {
+const Cart = ({ total, isLogined, cart, dispatch, history }) => {
   console.log(isLogined);
+  console.log(cart);
   return (
     <StyledCard>
       <div>
@@ -50,9 +53,17 @@ const Cart = ({ total, isLogined }) => {
             }}
             clientId={process.env.REACT_APP_PAYPAL_ID}
             options={{ disableFunding: 'credit', locale: 'en-VN' }}
-            onSuccess={(details, data) => {
-              console.log('details ', details);
-              console.log('data ', data);
+            onSuccess={details => {
+              if (details.status === 'COMPLETED') {
+                console.log('hello');
+                dispatch({
+                  type: ORDER_REQUEST,
+                  payload: {
+                    history,
+                    cart: cart.map(item => ({ bookId: item._id, quantity: Number(item.quantity) })),
+                  },
+                });
+              }
             }}
           />
         ) : (
@@ -62,4 +73,8 @@ const Cart = ({ total, isLogined }) => {
     </StyledCard>
   );
 };
-export default connect(state => ({ ...state, isLogined: state.customer.token }))(Cart);
+export default connect(state => ({
+  ...state,
+  isLogined: state.customer.token,
+  cart: state.cart.cart,
+}))(withRouter(Cart));

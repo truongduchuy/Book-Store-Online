@@ -13,6 +13,7 @@ import Register from 'components/storefront/Register';
 import ProductDetails from 'components/storefront/ProductDetails';
 import ScrollToTop from './components/storefront/ScrollToTop';
 import Cart from './components/storefront/Cart';
+import Checkout from './components/storefront/Checkout';
 import Customer from './components/storefront/Customer';
 import { GET_CART } from './components/storefront/Cart/ducks';
 import { GET_DATA_FROM_LOCAL } from 'components/storefront/Customer/ducks';
@@ -34,6 +35,7 @@ const App = ({ dispatch }) => {
         <Route exact path="/register" component={Register} />
         <Route exact path="/shop" component={Shop} />
         <Route exact path="/cart" component={Cart} />
+        <Route exact path="/checkout/success" component={Checkout} />
         <Route exact path="/shop/:name" component={ProductDetails} />
         <Route exact path="/customer" component={Customer} />
         <Route exact path="/dashboard/login" component={DashBoardLogin} />

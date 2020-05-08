@@ -3,6 +3,8 @@ const Customer = require('../models/customer');
 const Order = require('../models/order');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const isOperationValid = require('./utils/checkOperationValid');
+const auth = require('../middleware/authCustomer');
 
 const router = express.Router();
 
@@ -87,6 +89,65 @@ router.post('/login', async (req, res) => {
   } catch (e) {
     console.log(e.message);
     res.status(500).send(e);
+  }
+});
+
+router.patch('/changePass', auth, async (req, res) => {
+  try {
+    const { password, newPassword } = req.body;
+
+    const isMatch = await bcrypt.compare(password, req.customer.password);
+
+    if (!isMatch) throw new Error('password is incorrect!');
+
+    const newPassHashed = await bcrypt.hash(newPassword, 8);
+
+    req.customer.password = newPassHashed;
+    await req.customer.save();
+    res.send({ success: true });
+  } catch (e) {
+    console.log(e.message);
+    res.status(500).json({ error: e.message });
+  }
+});
+
+router.patch('/', auth, async (req, res) => {
+  try {
+    const { body } = req;
+
+    const updates = Object.keys(body);
+    const allowedUpdates = ['username', 'phoneNumber', 'address', 'email'];
+
+    if (!isOperationValid(updates, allowedUpdates)) {
+      res.status(400).json({ error: 'Bad request!' });
+    }
+
+    updates.forEach(update => (req.customer[update] = body[update]));
+
+    await req.customer.save();
+
+    res.send(req.customer);
+  } catch (e) {
+    console.log(e.message);
+    res.status(500).json({ error: e.message });
+  }
+});
+
+router.post('/order', auth, async (req, res) => {
+  try {
+    const { cart } = req.body;
+
+    if (!cart) res.sendStatus(400);
+
+    const order = new Order({
+      cart,
+      customer: req.customer._id,
+    });
+    console.log(order);
+    await order.save();
+    res.send({ success: true });
+  } catch (e) {
+    res.sendStatus(500);
   }
 });
 

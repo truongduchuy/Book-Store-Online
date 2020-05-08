@@ -9,8 +9,11 @@ const OrderSchema = new Schema(
     },
     cart: [
       {
-        type: Schema.Types.ObjectId,
-        ref: 'Book',
+        bookId: {
+          type: Schema.Types.ObjectId,
+          ref: 'Book',
+        },
+        quantity: Number,
       },
     ],
   },

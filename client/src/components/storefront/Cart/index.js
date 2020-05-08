@@ -127,7 +127,6 @@ const StyledContent = styled.div`
 `;
 
 const Cart = ({ cart, dispatch, total }) => {
-  console.log('cart', cart);
   return (
     <Layout pages={['Home', 'cart']}>
       <StyledContent>

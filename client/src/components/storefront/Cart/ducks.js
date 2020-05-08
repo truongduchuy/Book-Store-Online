@@ -1,9 +1,15 @@
-import { createReducer } from 'dorothy/utils';
+import { put, call, takeLatest, fork } from 'redux-saga/effects';
+import { callApi, createReducer, createAction } from 'dorothy/utils';
 
 export const ADD_TO_CART = 'ADD_TO_CART';
 export const UPDATE_CART = 'UPDATE_CART';
 export const REMOVE_ITEM = 'REMOVE_ITEM';
 export const GET_CART = 'GET_CART';
+
+export const ORDER_REQUEST = 'ORDER_REQUEST';
+export const ORDER_RESPONSE = 'ORDER_RESPONSE';
+
+export const CART_REQUEST_ERROR = 'CART_REQUEST_ERROR';
 
 const setItem = (name, value) => {
   try {
@@ -12,6 +18,24 @@ const setItem = (name, value) => {
     return false;
   }
 };
+
+function* requestOrder(action) {
+  console.log(action);
+  const { history, cart } = action.payload;
+  try {
+    console.log('action.payload', action.payload);
+    const response = yield call(callApi, 'POST', `/api/customers/order`, { cart });
+    if (response && response.success) {
+      history.push('/checkout/success');
+    } else throw new Error();
+  } catch (e) {
+    yield put(createAction(CART_REQUEST_ERROR));
+  }
+}
+
+function* watchOrderRequest() {
+  yield takeLatest(ORDER_REQUEST, requestOrder);
+}
 
 const initCart = {
   // cart: [{book: {}, quantity: 0, _id: null}],
@@ -71,3 +95,4 @@ const cartActionHandlers = {
 };
 
 export const cartReducer = createReducer(initCart, cartActionHandlers);
+export const cartSagas = [fork(watchOrderRequest)];

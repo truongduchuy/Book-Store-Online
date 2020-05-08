@@ -6,6 +6,11 @@ export const REGISTATION_REQUEST = 'REGISTATION_REQUEST';
 export const LOGIN_REQUEST = 'LOGIN_REQUEST';
 export const LOGIN_REPONSE = 'LOGIN_REPONSE';
 
+export const CUSTOMER_UPDATE_REQUEST = 'CUSTOMER_UPDATE_REQUEST';
+export const CUSTOMER_UPDATE_RESPONSE = 'CUSTOMER_UPDATE_RESPONSE';
+
+export const CUSTOMER_CHANGE_PASSWORD_REQUEST = 'CUSTOMER_CHANGE_PASSWORD_REQUEST';
+
 export const LOGOUT = 'LOGOUT';
 export const GET_DATA_FROM_LOCAL = 'GET_DATA_FROM_LOCAL';
 
@@ -53,10 +58,51 @@ function* requestLogin(action) {
 function* watchLoginRequest() {
   yield takeLatest(LOGIN_REQUEST, requestLogin);
 }
+
+function* updateCustomer(action) {
+  const { callBack, ...data } = action.payload;
+
+  try {
+    const response = yield call(callApi, 'PATCH', `/api/customers`, data);
+
+    if (response) {
+      yield put(createAction(CUSTOMER_UPDATE_RESPONSE, response));
+      callBack(true);
+    } else callBack(false);
+  } catch (error) {
+    yield put(createAction(CUSTOMER_REQUEST_ERROR));
+    callBack(false);
+  }
+}
+
+function* watchUpdateCustomer() {
+  yield takeLatest(CUSTOMER_UPDATE_REQUEST, updateCustomer);
+}
+
+function* changePassword(action) {
+  const { callBack, ...data } = action.payload;
+  console.log(action.payload);
+  try {
+    const response = yield call(callApi, 'PATCH', `/api/customers/changePass`, data);
+    console.log(response);
+    if (response && response.success) {
+      callBack(true);
+    } else callBack(false);
+  } catch (error) {
+    yield put(createAction(CUSTOMER_REQUEST_ERROR));
+    callBack(false);
+  }
+}
+
+function* watchChangePassword() {
+  yield takeLatest(CUSTOMER_CHANGE_PASSWORD_REQUEST, changePassword);
+}
+
 const initCustomer = {
   customer: {},
   token: null,
 };
+
 const customerActionHandlers = {
   [LOGIN_REPONSE]: (state, action) => {
     const { customer, token } = action.payload;
@@ -71,7 +117,18 @@ const customerActionHandlers = {
     const { token, customer } = action.payload || {};
     return { ...state, token, customer };
   },
+  [CUSTOMER_UPDATE_RESPONSE]: (state, action) => {
+    const { token } = state;
+
+    localStorage.setItem('customerData', JSON.stringify({ customer: action.payload, token }));
+    return { ...state, customer: action.payload };
+  },
 };
 
 export const customerReducer = createReducer(initCustomer, customerActionHandlers);
-export const customerSagas = [fork(watchRegistationRequest), fork(watchLoginRequest)];
+export const customerSagas = [
+  fork(watchRegistationRequest),
+  fork(watchLoginRequest),
+  fork(watchUpdateCustomer),
+  fork(watchChangePassword),
+];

@@ -51,11 +51,11 @@ CustomerSchema.virtual('orders', {
 CustomerSchema.statics.findByCredentials = async (email, password) => {
   const customer = await Customer.findOne({ email });
 
-  if (!customer) throw new Error('Unable to login');
+  if (!customer) throw new Error('Not found');
 
   const isMatch = await bcrypt.compare(password, customer.password);
 
-  if (!isMatch) throw new Error('Unable to login');
+  if (!isMatch) throw new Error('password is incorrect!');
 
   return customer;
 };

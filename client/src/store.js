@@ -3,7 +3,7 @@ import { all } from 'redux-saga/effects';
 import createSagaMiddleware from 'redux-saga';
 import { genreReducer, genreSagas } from 'components/dashboard/Genres/ducks';
 import { bookReducer, bookSagas } from 'components/dashboard/Books/ducks';
-import { cartReducer } from 'components/storefront/Cart/ducks';
+import { cartReducer, cartSagas } from 'components/storefront/Cart/ducks';
 import { customerReducer, customerSagas } from 'components/storefront/Customer/ducks';
 
 const rootReducer = combineReducers({
@@ -14,7 +14,7 @@ const rootReducer = combineReducers({
 });
 
 export const rootSaga = function* rootSaga() {
-  yield all([...genreSagas, ...bookSagas, ...customerSagas]);
+  yield all([...genreSagas, ...bookSagas, ...customerSagas, ...cartSagas]);
 };
 
 const sagaMiddleware = createSagaMiddleware();
