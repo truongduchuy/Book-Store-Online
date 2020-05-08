@@ -1,0 +1,181 @@
+<!DOCTYPE html
+    PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= subject %></title>
+    <style type="text/css">
+        .tr-heading, .tr-body {
+            display: flex;
+        }
+        .tr-heading > div, .tr-body > div {
+            width: 20%;
+        }
+
+        .tr-heading > div:first-child, .tr-body > div:first-child {
+            width: 40%;
+        }
+        
+        .thead {
+            padding: 8px 5px;
+            background-color: rgb(2, 172, 234);
+            color: white;
+        }
+
+        .tbody {
+            background-color: #eeeeee;
+            margin-bottom: 20px;
+        }
+
+        .tr-body > div {
+            padding: 5px;
+        }
+
+        /* .total {
+            display: flex;
+            justify-content: space-between;
+        } */
+    </style>
+</head>
+
+<body 
+    style="min-width: 100% !important; margin: 0; padding: 0 ; color: #153643; font-family: 'Helvetica', 'Arial', sans-serif; font-size: 16px; line-height: 22px;">
+    <table id="wrapper" bgcolor="#f6f8f1" align="center" cellpadding="0" cellspacing="0" border="0" width="100%"
+        style="max-width: 600px; padding: 35px 25px;">
+        <!-- SECTION HEADER -->
+        <tr>
+            <td>
+                <h2 style="letter-spacing: 5px; margin-bottom: 5px; color: #D64F32;">
+                    <a href="https://bookstoremern.herokuapp.com" target="blank"
+                        style="white-space: nowrap; text-decoration: none; color: #D64F32; cursor: pointer;">
+                        <strong><%= appName %></strong>
+                    </a>
+                </h2>
+                <!--                   <hr style="max-width: 130px; color: #D64F32; border:1px #D64F32 solid;" align="left" /> -->
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <table id="header-line" align="left" cellpadding="0" cellspacing="0" border="0" style="width: 100%;">
+                    <tbody>
+                        <tr>
+                            <td>
+                                <span style="font-size: 10px; color: #D64F32;white-space: nowrap;">AI FOR E-COMMERCE</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+        <!-- SECTION MESSAGE -->
+        <tr>
+            <td>
+                <table id="message-content" align="center" cellpadding="0" cellspacing="0" border="0" width="100%"
+                    style="background-color: white; margin: 20px 0px; padding:20px; border-radius:5px; -moz-border-radius:5px; -webkit-border-radius:5px;">
+                    <tbody>
+                        <!-- GREETINGS -->
+                        <tr>
+                            <td
+                                style="color: #153643; font-size: 24px; line-height: 28px; font-weight: bold; padding: 0 0 15px;">
+                                Hi <%= recipientName %>,
+                            </td>
+                        </tr>
+                        <!-- BODY -->
+                        <tr>
+                            <td style="color: #153643; font-size: 16px; line-height: 22px; text-align: justify;">
+                                <!-- The reason to use PHP here is that it doesn't show HTML special character if using Blade syntax even with htmlspecialchars() and htmlspecialchars_decode() -->
+                                <p><%= body %></p>
+                                <p>
+                                        Please contact us if you have further questions!    
+                                </p>
+                            </td>
+                        </tr>
+                        <!-- SIGNATURE -->
+                        <tr>
+                            <td style="color: #153643; font-size: 16px; line-height: 22px; padding: 20px 0px 20 0px;">
+                                <p>Yours faithfully,</p>
+                                <h3>The team at Huy Tru Store</h3>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+         <!-- ORDER_DETAILS -->
+         <tr>
+            <td>
+            <h4 style="color: rgb(2, 172, 234);">Order details</h4>
+            <div>
+                <div class="thead">
+                    <div class="tr-heading">
+                        <div>Title</div>
+                        <div>Price</div>
+                        <div>Quantity</div>
+                        <div>Subtotal</div>
+                    </div>
+                </div>
+                 <div class="tbody">  
+                    <% for (var book of cart){ %>
+                        <div class="tr-body">
+                            <div><%=book.title%></div>
+                            <div>$<%=book.price%></div>
+                            <div><%=book.quantity%></div>
+                            <div>$<%=book.subtotal%></div>
+                        </div>    
+                    <% } %> 
+                    <div class="tr-body">
+                        <div style="width: 80% !important;">Total</div>
+                        <div style="transform: translateX(4px); font-weight: 700;">$<%= total %></div>
+                    </div>
+                </div>
+            </div>
+        </td>
+        </tr>
+        <!-- SECTION FOOTER -->
+        <tr>
+            <td>
+                <table id="contact-links" align="center" cellpadding="0" cellspacing="0" border="0">
+                    <tr>
+                        <td align="center">
+                            <a href="http://www.facebook.com" target="blank"
+                                style="white-space: nowrap; padding: 5px 5px; margin: 3px; text-decoration: none; font-size: 11px; color: #3b5998; cursor: pointer; font-weight:bold;">facebook</a>
+                        </td>
+                        <td>|</td>
+                        <td align="center">
+                            <a href="http://www.twitter.com" target="blank"
+                                style="white-space: nowrap; padding: 5px 5px; margin: 3px; text-decoration: none; font-size: 11px; color: #55acee; cursor: pointer; font-weight:bold;">twitter</a>
+                        </td>
+                        <td>|</td>
+                        <td align="center">
+                            <a href="http://www.instagram.com" target="blank"
+                                style="white-space: nowrap; padding: 5px 5px; margin: 3px; text-decoration: none; font-size: 11px; color: #e95950; cursor: pointer; font-weight:bold;">instagram</a>
+                        </td>
+                        <td>|</td>
+                        <td align="center">
+                            <a href="huy0935903718@gmail.com"
+                                style="white-space: nowrap; padding: 5px 5px; margin: 3px; text-decoration: none; font-size: 11px; color: red; cursor: pointer; font-weight:bold; ">email</a>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align: center; font-size: 10px;">
+                If you no longer want to receive any more messages from us, you can
+                <a href="##" style="color: #D64F32; text-decoration: none;"
+                    target="blank">unsubscribe here</a>.
+            </td>
+        </tr>
+    </table>
+    <!--[if (gte mso 9)|(IE)]>
+          
+    </td>
+</tr>
+</table>
+<![endif]-->
+</body>
+
+</html>
