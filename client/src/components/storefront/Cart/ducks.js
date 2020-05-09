@@ -9,7 +9,7 @@ export const GET_CART = 'GET_CART';
 export const ORDER_REQUEST = 'ORDER_REQUEST';
 export const ORDER_RESPONSE = 'ORDER_RESPONSE';
 
-export const CART_REQUEST_ERROR = 'CART_REQUEST_ERROR';
+export const ORDER_ERROR = 'ORDER_ERROR';
 
 const setItem = (name, value) => {
   try {
@@ -27,9 +27,10 @@ function* requestOrder(action) {
     const response = yield call(callApi, 'POST', `/api/customers/order`, { cart });
     if (response && response.success) {
       history.push('/checkout/success');
+      yield put(createAction(ORDER_RESPONSE));
     } else throw new Error();
   } catch (e) {
-    yield put(createAction(CART_REQUEST_ERROR));
+    yield put(createAction(ORDER_ERROR));
   }
 }
 
@@ -40,6 +41,7 @@ function* watchOrderRequest() {
 const initCart = {
   // cart: [{book: {}, quantity: 0, _id: null}],
   cart: [],
+  isWaitingCheckout: false,
 };
 
 const cartActionHandlers = {
@@ -92,6 +94,9 @@ const cartActionHandlers = {
     }
     return state;
   },
+  [ORDER_REQUEST]: state => ({ ...state, isWaitingCheckout: true }),
+  [ORDER_RESPONSE]: state => ({ ...state, isWaitingCheckout: false }),
+  [ORDER_ERROR]: state => ({ ...state, isWaitingCheckout: false }),
 };
 
 export const cartReducer = createReducer(initCart, cartActionHandlers);

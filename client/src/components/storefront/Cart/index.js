@@ -1,5 +1,5 @@
 import React from 'react';
-import { Icon } from 'antd';
+import { Icon, Spin } from 'antd';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
@@ -126,11 +126,21 @@ const StyledContent = styled.div`
   }
 `;
 
-const Cart = ({ cart, dispatch, total }) => {
+const Loading = styled.div`
+  display: flex;
+  justify-content: center;
+`;
+
+const Cart = ({ cart, dispatch, total, isWaitingCheckout }) => {
   return (
     <Layout pages={['Home', 'cart']}>
       <StyledContent>
-        {cart.length > 0 ? (
+        {isWaitingCheckout && (
+          <Loading>
+            <Spin indicator={<Icon type="loading" style={{ fontSize: 24 }} spin />} />
+          </Loading>
+        )}
+        {cart.length > 0 && !isWaitingCheckout && (
           <>
             <table>
               <thead>
@@ -180,7 +190,8 @@ const Cart = ({ cart, dispatch, total }) => {
             </table>
             <CardCheckout total={total} />
           </>
-        ) : (
+        )}
+        {cart.length === 0 && (
           <div style={{ textAlign: 'center' }}>Your cart is currently empty.</div>
         )}
       </StyledContent>
@@ -191,4 +202,5 @@ const Cart = ({ cart, dispatch, total }) => {
 export default connect(state => ({
   cart: state.cart.cart,
   total: state.cart.cart.reduce((acc, { book, quantity }) => acc + book.price * quantity, 0),
+  isWaitingCheckout: state.cart.isWaitingCheckout,
 }))(Cart);
