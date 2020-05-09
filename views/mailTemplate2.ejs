@@ -12,10 +12,11 @@
         }
         .tr-heading > div, .tr-body > div {
             width: 20%;
+            padding: 5px;
         }
 
         .tr-heading > div:first-child, .tr-body > div:first-child {
-            width: 40%;
+            margin-left: 10px;
         }
         
         .thead {
@@ -28,15 +29,6 @@
             background-color: #eeeeee;
             margin-bottom: 20px;
         }
-
-        .tr-body > div {
-            padding: 5px;
-        }
-
-        /* .total {
-            display: flex;
-            justify-content: space-between;
-        } */
     </style>
 </head>
 
@@ -111,6 +103,7 @@
             <div>
                 <div class="thead">
                     <div class="tr-heading">
+                        <div>&nbsp;</div>
                         <div>Title</div>
                         <div>Price</div>
                         <div>Quantity</div>
@@ -120,7 +113,10 @@
                  <div class="tbody">  
                     <% for (var book of cart){ %>
                         <div class="tr-body">
-                            <div><%=book.title%></div>
+                            <div>
+                                <img style="max-width: 85%; width: 85%;" src="<%=book.imageUrl%>" alt="book" />
+                            </div>
+                            <div><%=book.title%> adsadasd</div>
                             <div>$<%=book.price%></div>
                             <div><%=book.quantity%></div>
                             <div>$<%=book.subtotal%></div>
@@ -128,7 +124,7 @@
                     <% } %> 
                     <div class="tr-body">
                         <div style="width: 80% !important;">Total</div>
-                        <div style="transform: translateX(4px); font-weight: 700;">$<%= total %></div>
+                        <div style="padding-left: 20px; font-weight: 700;">$<%= total %></div>
                     </div>
                 </div>
             </div>
