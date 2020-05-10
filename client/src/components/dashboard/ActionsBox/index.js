@@ -23,11 +23,13 @@ const ActionsBox = ({ title, buttonLabel, onClick, onSearch }) => {
     <Container>
       <div>
         <h2>{title}</h2>
-        <Search placeholder="search" style={{ width: '250px' }} onSearch={onSearch} />
+        {onSearch && <Search placeholder="search" style={{ width: '250px' }} onSearch={onSearch} />}
       </div>
-      <Button type="primary" ghost onClick={onClick}>
-        <Icon type="plus" /> {buttonLabel}
-      </Button>
+      {onClick && (
+        <Button type="primary" ghost onClick={onClick}>
+          <Icon type="plus" /> {buttonLabel}
+        </Button>
+      )}
     </Container>
   );
 };

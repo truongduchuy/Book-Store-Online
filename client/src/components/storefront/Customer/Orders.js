@@ -24,6 +24,10 @@ const columns = [
     dataIndex: 'orderTotal',
     render: data => <span>${data}</span>,
   },
+  {
+    title: 'Status',
+    dataIndex: 'status',
+  },
 ];
 
 const Orders = ({ orders, dispatch }) => {

@@ -55,20 +55,16 @@ const HeaderContainer = styled.header`
 const Header = () => {
   const links = [
     {
+      url: '/dashboard/orders',
+      label: 'Orders',
+    },
+    {
       url: '/dashboard/books',
       label: 'Books',
     },
     {
-      url: '/dashboard/authors',
-      label: 'Authors',
-    },
-    {
       url: '/dashboard/genres',
       label: 'Genres',
-    },
-    {
-      url: '/dashboard/orders',
-      label: 'Orders',
     },
   ];
 

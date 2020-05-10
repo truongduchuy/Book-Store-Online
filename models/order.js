@@ -16,6 +16,10 @@ const OrderSchema = new Schema(
         quantity: Number,
       },
     ],
+    status: {
+      type: String,
+      default: 'Progressing',
+    },
   },
   { timestamps: true, versionKey: false },
 );
