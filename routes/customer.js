@@ -154,4 +154,28 @@ router.post('/order', auth, async (req, res) => {
   }
 });
 
+router.get('/orders', auth, async (req, res) => {
+  try {
+    // exec() is used with a query
+    // execPopulate() is used with a document
+    await req.customer
+      .populate({
+        path: 'orders',
+        options: {
+          sort: {
+            createdAt: -1,
+          },
+        },
+        populate: {
+          path: 'cart.bookId',
+        },
+      })
+      .execPopulate();
+
+    res.send(req.customer.orders);
+  } catch (e) {
+    console.log(e.message);
+    res.sendStatus(500);
+  }
+});
 module.exports = router;

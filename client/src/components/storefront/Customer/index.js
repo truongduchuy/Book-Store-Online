@@ -6,13 +6,14 @@ import styled from 'styled-components';
 import Layout from 'components/storefront/Layout';
 import Profile from './profile';
 import ChangePass from './ChangePass';
+import Orders from './Orders';
 
 const StyledContent = styled.section`
   padding: 70px 70px;
   display: flex;
 
   .left-box {
-    margin-right: 100px;
+    margin-right: 50px;
 
     > .ant-card {
       border: 1px solid #42a5f5;
@@ -28,16 +29,27 @@ const StyledContent = styled.section`
         cursor: pointer;
         border: 1px solid #eee;
 
+        &.active {
+          color: #42a5f5;
+          border: 1px solid #42a5f5;
+        }
+
         &:hover {
           border: 1px solid #42a5f5;
         }
       }
     }
   }
+
+  .right-box {
+    width: 100%;
+  }
 `;
 
-const Customer = ({ customer }) => {
+const Customer = ({ customer, isWaitingOrders }) => {
   const [isChangePass, setChangePass] = useState(false);
+  const [isShowOrders, setShowOrders] = useState(false);
+
   const { username } = customer;
 
   if (!username) return null;
@@ -53,13 +65,13 @@ const Customer = ({ customer }) => {
             bodyStyle={{ padding: 0, height: '300px' }}
             headStyle={{ backgroundColor: '#42a5f5', color: 'white' }}
           >
-            <div onClick={() => console.log('filter undone reports')}>
+            <div className={!isShowOrders ? 'active' : null} onClick={() => setShowOrders(false)}>
               <span>Profile</span>
             </div>
-            <div onClick={() => console.log('filter done reports')}>
+            <div className={isShowOrders ? 'active' : null} onClick={() => setShowOrders(true)}>
               <span>Orders</span>
             </div>
-            <div onClick={() => setChangePass(true)}>
+            <div className={isChangePass ? 'active' : null} onClick={() => setChangePass(true)}>
               <span>Change Password</span>
             </div>
           </Card>
@@ -68,11 +80,13 @@ const Customer = ({ customer }) => {
           {isChangePass && (
             <ChangePass isOpen={isChangePass} onClose={() => setChangePass(false)} />
           )}
-          <Profile />
+          {isShowOrders ? <Orders /> : <Profile />}
         </div>
       </StyledContent>
     </Layout>
   );
 };
 
-export default connect(state => ({ customer: state.customer.customer }))(Customer);
+export default connect(state => ({
+  customer: state.customer.customer,
+}))(Customer);

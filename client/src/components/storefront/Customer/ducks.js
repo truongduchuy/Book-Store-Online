@@ -6,6 +6,9 @@ export const REGISTATION_REQUEST = 'REGISTATION_REQUEST';
 export const LOGIN_REQUEST = 'LOGIN_REQUEST';
 export const LOGIN_REPONSE = 'LOGIN_REPONSE';
 
+export const GET_ORDERS_REQUEST = 'GET_ORDERS_REQUEST';
+export const GET_ORDERS_RESPONSE = 'GET_ORDERS_RESPONSE';
+
 export const CUSTOMER_UPDATE_REQUEST = 'CUSTOMER_UPDATE_REQUEST';
 export const CUSTOMER_UPDATE_RESPONSE = 'CUSTOMER_UPDATE_RESPONSE';
 
@@ -98,9 +101,26 @@ function* watchChangePassword() {
   yield takeLatest(CUSTOMER_CHANGE_PASSWORD_REQUEST, changePassword);
 }
 
+function* getOrders() {
+  try {
+    const response = yield call(callApi, 'GET', `/api/customers/orders`);
+    if (response) {
+      yield put(createAction(GET_ORDERS_RESPONSE, response));
+    } else throw new Error();
+  } catch (error) {
+    yield put(createAction(CUSTOMER_REQUEST_ERROR));
+  }
+}
+
+function* watchOrdersRequest() {
+  yield takeLatest(GET_ORDERS_REQUEST, getOrders);
+}
+
 const initCustomer = {
   customer: {},
   token: null,
+  orders: [],
+  isWaitingOrders: false,
 };
 
 const customerActionHandlers = {
@@ -123,6 +143,18 @@ const customerActionHandlers = {
     localStorage.setItem('customerData', JSON.stringify({ customer: action.payload, token }));
     return { ...state, customer: action.payload };
   },
+  [GET_ORDERS_REQUEST]: state => ({ ...state, isWaitingOrders: true }),
+  [GET_ORDERS_RESPONSE]: (state, action) => {
+    const orders = action.payload.map(order => ({
+      ...order,
+      orderTotal: order.cart.reduce(
+        (acc, { bookId, quantity }) => acc + Number(bookId.price) * Number(quantity),
+        0,
+      ),
+    }));
+    return { ...state, orders, isWaitingOrders: false };
+  },
+  [CUSTOMER_REQUEST_ERROR]: state => ({ ...state, isWaitingOrders: false }),
 };
 
 export const customerReducer = createReducer(initCustomer, customerActionHandlers);
@@ -131,4 +163,5 @@ export const customerSagas = [
   fork(watchLoginRequest),
   fork(watchUpdateCustomer),
   fork(watchChangePassword),
+  fork(watchOrdersRequest),
 ];
