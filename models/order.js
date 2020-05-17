@@ -4,8 +4,16 @@ const { Schema } = mongoose;
 const OrderSchema = new Schema(
   {
     customer: {
-      type: Schema.Types.ObjectId,
-      ref: 'Customer',
+      customerInfo: {
+        type: Schema.Types.ObjectId,
+        ref: 'Customer',
+      },
+      address: {
+        type: String,
+      },
+      phoneNumber: {
+        type: String,
+      },
     },
     cart: [
       {

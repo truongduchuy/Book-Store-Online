@@ -46,13 +46,17 @@ const orderActionHandlers = {
   [ORDERS_REQUEST]: state => ({ ...state, isWaitingOrders: true }),
   [ORDERS_RESPONSE]: (state, action) => {
     const { orders, total } = action.payload;
-
     const ordersData = orders.map(order => ({
       ...order,
       orderTotal: order.cart.reduce(
         (acc, { bookId, quantity }) => acc + Number(bookId.price) * Number(quantity),
         0,
       ),
+      customer: {
+        ...order.customer.customerInfo,
+        address: order.customer.address,
+        phoneNumber: order.customer.phoneNumber,
+      },
     }));
     return { ...state, orders: ordersData, total, isWaitingOrders: false };
   },

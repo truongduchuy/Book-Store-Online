@@ -19,6 +19,8 @@ export const GET_DATA_FROM_LOCAL = 'GET_DATA_FROM_LOCAL';
 
 export const CUSTOMER_REQUEST_ERROR = 'CUSTOMER_REQUEST_ERROR';
 
+export const UPDATE_SHIPPING_INFO = 'UPDATE_SHIPPING_INFO';
+
 function* requestRegistation(action) {
   const { history, callBack, ...newCustomer } = action.payload;
   try {
@@ -118,6 +120,7 @@ function* watchOrdersRequest() {
 
 const initCustomer = {
   customer: {},
+  currentCustomer: { address: null, phoneNumber: null },
   token: null,
   orders: [],
   isWaitingOrders: false,
@@ -127,7 +130,12 @@ const customerActionHandlers = {
   [LOGIN_REPONSE]: (state, action) => {
     const { customer, token } = action.payload;
     localStorage.setItem('customerData', JSON.stringify(action.payload));
-    return { ...state, customer, token };
+    return {
+      ...state,
+      customer,
+      currentCustomer: { address: customer.address, phoneNumber: customer.phoneNumber },
+      token,
+    };
   },
   [LOGOUT]: state => {
     localStorage.removeItem('customerData');
@@ -135,13 +143,23 @@ const customerActionHandlers = {
   },
   [GET_DATA_FROM_LOCAL]: (state, action) => {
     const { token, customer } = action.payload || {};
-    return { ...state, token, customer };
+    return {
+      ...state,
+      token,
+      customer,
+      currentCustomer: { address: customer?.address, phoneNumber: customer?.phoneNumber },
+    };
   },
   [CUSTOMER_UPDATE_RESPONSE]: (state, action) => {
     const { token } = state;
+    const customer = action.payload;
 
-    localStorage.setItem('customerData', JSON.stringify({ customer: action.payload, token }));
-    return { ...state, customer: action.payload };
+    localStorage.setItem('customerData', JSON.stringify({ customer, token }));
+    return {
+      ...state,
+      customer,
+      currentCustomer: { address: customer?.address, phoneNumber: customer?.phoneNumber },
+    };
   },
   [GET_ORDERS_REQUEST]: state => ({ ...state, isWaitingOrders: true }),
   [GET_ORDERS_RESPONSE]: (state, action) => {
@@ -155,6 +173,7 @@ const customerActionHandlers = {
     return { ...state, orders, isWaitingOrders: false };
   },
   [CUSTOMER_REQUEST_ERROR]: state => ({ ...state, isWaitingOrders: false }),
+  [UPDATE_SHIPPING_INFO]: (state, action) => ({ ...state, currentCustomer: action.payload }),
 };
 
 export const customerReducer = createReducer(initCustomer, customerActionHandlers);

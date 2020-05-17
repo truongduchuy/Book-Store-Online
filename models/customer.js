@@ -44,7 +44,7 @@ const CustomerSchema = new Schema(
 CustomerSchema.virtual('orders', {
   ref: 'Order',
   localField: '_id',
-  foreignField: 'customer',
+  foreignField: 'customer.customerInfo',
 });
 
 // schema method

@@ -3,6 +3,8 @@ import { callApi, createReducer, createAction } from 'dorothy/utils';
 
 export const ADD_TO_CART = 'ADD_TO_CART';
 export const UPDATE_CART = 'UPDATE_CART';
+export const REMOVE_CART = 'REMOVE_CART';
+
 export const REMOVE_ITEM = 'REMOVE_ITEM';
 export const GET_CART = 'GET_CART';
 
@@ -20,14 +22,14 @@ const setItem = (name, value) => {
 };
 
 function* requestOrder(action) {
-  console.log(action);
-  const { history, cart } = action.payload;
+  const { history, ...data } = action.payload;
   try {
     console.log('action.payload', action.payload);
-    const response = yield call(callApi, 'POST', `/api/customers/order`, { cart });
+    const response = yield call(callApi, 'POST', `/api/customers/order`, data);
     if (response && response.success) {
       history.push('/checkout/success');
       yield put(createAction(ORDER_RESPONSE));
+      yield put(createAction(REMOVE_CART));
     } else throw new Error();
   } catch (e) {
     yield put(createAction(ORDER_ERROR));
@@ -93,6 +95,14 @@ const cartActionHandlers = {
       };
     }
     return state;
+  },
+  [REMOVE_CART]: state => {
+    const cart = [];
+    setItem('cart', cart);
+    return {
+      ...state,
+      cart,
+    };
   },
   [ORDER_REQUEST]: state => ({ ...state, isWaitingCheckout: true }),
   [ORDER_RESPONSE]: state => ({ ...state, isWaitingCheckout: false }),

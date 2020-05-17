@@ -42,7 +42,7 @@ router.post('/login', async (req, res) => {
     if (!email || !password) res.status(403).send();
 
     const customer = await Customer.findByCredentials(email, password);
-    const token = jwt.sign({ _id: customer._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    const token = jwt.sign({ _id: customer._id }, process.env.JWT_SECRET, { expiresIn: '5h' });
 
     res.send({ customer, token });
   } catch (e) {
@@ -94,14 +94,19 @@ router.patch('/', auth, async (req, res) => {
 
 router.post('/order', auth, async (req, res) => {
   try {
-    const { cart } = req.body;
+    const { cart, currentCustomer } = req.body;
     const { _id, email, username } = req.customer;
+    const { phoneNumber, address } = currentCustomer;
 
     if (!cart) res.sendStatus(400);
 
     const order = new Order({
       cart,
-      customer: _id,
+      customer: {
+        customerInfo: _id,
+        phoneNumber,
+        address,
+      },
     });
 
     await order.save();
@@ -171,7 +176,7 @@ router.get('/orders', auth, async (req, res) => {
         },
       })
       .execPopulate();
-
+    console.log(req.customer.orders);
     res.send(req.customer.orders);
   } catch (e) {
     console.log(e.message);

@@ -11,7 +11,7 @@ router.get('/', async (req, res) => {
       .skip((page - 1) * Number(size))
       .limit(Number(size))
       .sort({ createdAt: -1 })
-      .populate({ path: 'customer', select: { password: 0 } })
+      .populate({ path: 'customer.customerInfo', select: { password: 0 } })
       .populate({ path: 'cart.bookId', select: { genre: 0 } });
 
     res.send({ orders, total });
