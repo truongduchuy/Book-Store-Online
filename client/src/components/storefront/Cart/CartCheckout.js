@@ -52,24 +52,26 @@ const Cart = ({ total, isLogined, cart, dispatch, history, currentCustomer }) =>
             <strong>${total}</strong>
           </p>
         </div>
-        <div className="shipping-info">
-          <div>
-            Your order will be shipped to <strong>{address}</strong>
+        {isLogined && (
+          <div className="shipping-info">
+            <div>
+              Your order will be shipped to <strong>{address}</strong>
+            </div>
+            <div>
+              Phone number: <strong>{phoneNumber}</strong>
+            </div>
+            <div>
+              Please{' '}
+              <span
+                style={{ cursor: 'pointer', color: '#1890ff' }}
+                onClick={() => setshippingModalOpen(true)}
+              >
+                update
+              </span>{' '}
+              if you want to ship to another address!
+            </div>
           </div>
-          <div>
-            Phone number: <strong>{phoneNumber}</strong>
-          </div>
-          <div>
-            Please{' '}
-            <span
-              style={{ cursor: 'pointer', color: '#1890ff' }}
-              onClick={() => setshippingModalOpen(true)}
-            >
-              update
-            </span>{' '}
-            if you want to ship to another address!
-          </div>
-        </div>
+        )}
         <ShippingInfoModal isOpen={shippingModalOpen} onClose={() => setshippingModalOpen(false)} />
         {isLogined ? (
           <PayPalButton
