@@ -6,6 +6,8 @@ import { connect } from 'react-redux';
 import Button from '../Button';
 import { Rate } from 'antd';
 import 'antd/es/rate/style/css';
+import { REVIEW_CREATE_REQUEST, REVIEW_UPDATE_REQUEST } from 'components/dashboard/Books/ducks';
+import Notification from 'antd-components/notification';
 
 const Container = styled.div`
   width: 50%;
@@ -79,14 +81,14 @@ const Container = styled.div`
 
 const { TextArea } = Input;
 
-const Reviews = ({ average, reviews }) => {
+const Reviews = ({ average, reviews, boughtList, bookId, dispatch, customerId }) => {
   const [isWritingReview, setisWritingReview] = useState(false);
   const [reviewData, setReviewData] = useState({ heading: '', body: '', rate: 0 });
   const { heading, body, rate } = reviewData;
+  const [reviewIdUpdating, setReviewIdUpdating] = useState(null);
+
   const roundedRate =
-    Math.round((reviews.reduce((acc, review) => acc + review.rating, 0) / reviews.length) * 10) /
-    10;
-  console.log(reviews);
+    Math.round((reviews.reduce((acc, review) => acc + review.rate, 0) / reviews.length) * 10) / 10;
 
   const handleChange = (value, field) => {
     setReviewData({ ...reviewData, [field]: value });
@@ -94,9 +96,31 @@ const Reviews = ({ average, reviews }) => {
 
   const onSubmit = e => {
     e.preventDefault();
+    if (heading === '' || body === '' || rate === 0)
+      Notification.error('Please enter all of fields!');
+    else {
+      if (!reviewIdUpdating)
+        dispatch({ type: REVIEW_CREATE_REQUEST, payload: { ...reviewData, bookId } });
+      else {
+        dispatch({
+          type: REVIEW_UPDATE_REQUEST,
+          payload: { ...reviewData, _id: reviewIdUpdating },
+        });
+      }
+      setisWritingReview(false);
+    }
+  };
 
-    console.log(reviewData);
-    setisWritingReview(false);
+  const handleReview = () => {
+    const previousReview = reviews.find(({ reviewer }) => reviewer._id === customerId);
+
+    if (previousReview) {
+      const { heading, body, rate } = previousReview;
+      setReviewData({ heading, body, rate });
+    }
+
+    setReviewIdUpdating(previousReview ? previousReview._id : false);
+    setisWritingReview(!isWritingReview);
   };
 
   return (
@@ -104,12 +128,11 @@ const Reviews = ({ average, reviews }) => {
       <div className="content">
         <div className="top-box">
           <h2>Reviews</h2>
-          <Button
-            lowercase
-            padding="10px 25px"
-            label="Write a review"
-            onClick={() => setisWritingReview(!isWritingReview)}
-          />
+          {boughtList?.includes(bookId) && (
+            <Button lowercase padding="10px 25px" onClick={handleReview}>
+              Write a review
+            </Button>
+          )}
         </div>
         {isWritingReview && (
           <form onSubmit={onSubmit}>
@@ -143,12 +166,12 @@ const Reviews = ({ average, reviews }) => {
           {reviews.map(review => (
             <div className="review" key={review._id}>
               <div className="review__header">
-                <Rate allowHalf defaultValue={review.rating} disabled />
+                <Rate allowHalf value={review.rate} disabled />
                 <h3>{review.heading}</h3>
                 <span>
-                  <strong>{review.reviewer.username}</strong>
+                  <strong>{review.reviewer?.username}</strong>
                   <span> - </span>
-                  <strong>{moment(review.createdAt).fromNow(true)} ago</strong>
+                  <strong>{moment(review.createdAt).fromNow(true)}</strong>
                 </span>
               </div>
               <div className="review__body">
@@ -162,4 +185,8 @@ const Reviews = ({ average, reviews }) => {
   );
 };
 
-export default connect(state => ({ reviews: state.book.bookDetails.reviews }))(Reviews);
+export default connect(state => ({
+  reviews: state.book.bookDetails.reviews,
+  customerId: state.customer.customer._id,
+  boughtList: state.customer.customer?.boughtList,
+}))(Reviews);

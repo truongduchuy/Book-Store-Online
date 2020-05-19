@@ -8,6 +8,7 @@ import Reviews from './Reviews';
 import Button from '../Button';
 import Layout from '../Layout';
 import { BOOK_DETAILS_REQUEST } from 'components/dashboard/Books/ducks';
+import { GET_BOUGHT_LIST_REQUEST } from 'components/storefront/Customer/ducks';
 import { ADD_TO_CART } from 'components/storefront/Cart/ducks';
 import Notification from 'antd-components/notification';
 
@@ -89,26 +90,34 @@ const StyledContent = styled.div`
 `;
 
 const calcAverageReview = reviews => {
-  const average = reviews?.reduce((acc, review) => acc + review.rating, 0) / reviews?.length;
+  const average = reviews?.reduce((acc, review) => acc + review.rate, 0) / reviews?.length;
   //roundoff number to nearest 0.5
   return Math.round(average * 2) / 2;
 };
 
-const ProductDetails = ({ match, dispatch, bookDetails, quantityInCart }) => {
+const ProductDetails = ({
+  match,
+  dispatch,
+  bookDetails,
+  quantityInCart,
+  isWaitingBoughtList,
+  boughtList,
+  isLogined,
+}) => {
   const [num, setNum] = useState(1);
   const title = match.params.name;
-  const { price, description, imageUrl, reviews, quantity } = bookDetails;
+  const { price, description, imageUrl, reviews, quantity, _id } = bookDetails;
   const average = calcAverageReview(reviews) || 0;
-  console.log('quantityInCart', quantityInCart);
+
   useEffect(() => {
+    if (isLogined) dispatch({ type: GET_BOUGHT_LIST_REQUEST });
     dispatch({ type: BOOK_DETAILS_REQUEST, payload: title });
-  }, [dispatch, title]);
+  }, [dispatch, title, _id, isLogined]);
 
   const quantityValid = (numAdded, quantityOfBook) =>
     numAdded + Number(quantityInCart) <= quantityOfBook;
 
   const handleChangeQuantity = value => {
-    console.log('quantityValid(value, quantity)', quantityValid(value, quantity));
     if (!quantityValid(value, quantity)) {
       Notification.warning(`Sorry, we only have ${quantity}!`);
     } else if (value > 0) {
@@ -164,13 +173,16 @@ const ProductDetails = ({ match, dispatch, bookDetails, quantityInCart }) => {
             )}
           </div>
         </div>
-        <Reviews average={average} />
+        <Reviews average={average} bookId={_id} />
       </StyledContent>
     </Layout>
   );
 };
 
-export default connect(({ book, cart }) => ({
+export default connect(({ book, cart, customer }) => ({
   bookDetails: book.bookDetails,
   quantityInCart: cart.cart.find(item => book.bookDetails._id === item._id)?.quantity || 0,
+  isWaitingBoughtList: customer.isWaitingBoughtList,
+  boughtList: customer.boughtList,
+  isLogined: customer.token,
 }))(ProductDetails);

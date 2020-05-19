@@ -16,6 +16,9 @@ export const BOOK_UPDATE_RESPONSE = 'BOOK_UPDATE_RESPONSE';
 export const REVIEWS_REQUEST = 'REVIEWS_REQUEST';
 export const REVIEWS_RESPONSE = 'REVIEWS_RESPONSE';
 
+export const REVIEW_UPDATE_REQUEST = 'REVIEW_UPDATE_REQUEST';
+export const REVIEW_UPDATE_RESPONSE = 'REVIEW_UPDATE_RESPONSE';
+
 export const REVIEW_DELETE_REQUEST = 'REVIEW_DELETE_REQUEST';
 export const REVIEW_DELETE_RESPONSE = 'REVIEW_DELETE_RESPONSE';
 
@@ -167,7 +170,6 @@ function* watchBookDetailsRequest() {
 
 function* createReviewRequest(action) {
   try {
-    console.log('action.payload', action.payload);
     const response = yield call(callApi, 'POST', `/api/reviews`, action.payload);
     console.log('response', response);
     if (response) yield put(createAction(REVIEW_CREATE_RESPONSE, response));
@@ -179,6 +181,22 @@ function* createReviewRequest(action) {
 
 function* watchCreateReviewRequest() {
   yield takeLatest(REVIEW_CREATE_REQUEST, createReviewRequest);
+}
+
+function* updateReview(action) {
+  try {
+    const { _id, ...data } = action.payload;
+    const response = yield call(callApi, 'PATCH', `/api/reviews/${_id}`, data);
+    if (response && response.success)
+      yield put(createAction(REVIEW_UPDATE_RESPONSE, action.payload));
+  } catch (error) {
+    console.log(error);
+    yield put(createAction(REQUEST_ERROR));
+  }
+}
+
+function* watchUpdateReviewRequest() {
+  yield takeLatest(REVIEW_UPDATE_REQUEST, updateReview);
 }
 
 const initBook = {
@@ -281,7 +299,20 @@ const bookActionHandlers = {
       ...state,
       bookDetails: {
         ...state.bookDetails,
-        reviews: [...state.bookDetails.reviews, action.payload],
+        reviews: [action.payload, ...state.bookDetails.reviews],
+      },
+    };
+  },
+  [REVIEW_UPDATE_RESPONSE]: (state, action) => {
+    const { _id, heading, body, rate } = action.payload;
+    console.log('rate', rate);
+    return {
+      ...state,
+      bookDetails: {
+        ...state.bookDetails,
+        reviews: state.bookDetails.reviews.map(review =>
+          review._id === _id ? { ...review, heading, body, rate } : review,
+        ),
       },
     };
   },
@@ -304,4 +335,5 @@ export const bookSagas = [
   fork(watchDeleteReview),
   fork(watchBookDetailsRequest),
   fork(watchCreateReviewRequest),
+  fork(watchUpdateReviewRequest),
 ];

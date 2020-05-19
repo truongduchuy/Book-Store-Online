@@ -37,6 +37,11 @@ const CustomerSchema = new Schema(
       type: String,
       required: true,
     },
+    boughtList: [
+      {
+        type: String,
+      },
+    ],
   },
   { versionKey: false },
 );

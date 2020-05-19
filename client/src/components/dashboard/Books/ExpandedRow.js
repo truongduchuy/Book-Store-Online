@@ -36,8 +36,8 @@ const ExpandedRow = ({ bookId, review, dispatch, isWaitingReviews }) => {
       dataIndex: 'body',
     },
     {
-      title: 'Rating',
-      dataIndex: 'rating',
+      title: 'Rate',
+      dataIndex: 'rate',
     },
     {
       title: 'Reviewed Date',

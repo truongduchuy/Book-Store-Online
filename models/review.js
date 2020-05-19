@@ -10,7 +10,7 @@ const ReviewSchema = new Schema(
     body: {
       type: String,
     },
-    rating: {
+    rate: {
       type: Number,
       required: true,
       validate(value) {

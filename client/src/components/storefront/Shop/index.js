@@ -72,7 +72,7 @@ const StyledContent = styled.div`
 
       .wrapper {
         padding: 0 20px;
-        flex-basis: 33.33%;
+        width: 33.33%;
         margin-bottom: 50px;
         height: auto;
 
@@ -138,6 +138,14 @@ const StyledContent = styled.div`
             font-weight: 700;
             padding: 10px;
 
+            a {
+              max-width: 100%;
+              white-space: nowrap;
+              overflow: hidden !important;
+              text-overflow: ellipsis;
+              display: inline-block;
+            }
+
             p {
               margin-top: 10px;
             }
@@ -153,14 +161,14 @@ const StyledContent = styled.div`
 
     .books-box .books {
       .wrapper {
-        flex-basis: 50%;
+        width: 50%;
       }
     }
   }
 
   @media screen and (max-width: 480px) {
     .books-box .books .wrapper {
-      flex-basis: 100%;
+      width: 100%;
     }
   }
 `;

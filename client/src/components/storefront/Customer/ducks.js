@@ -21,6 +21,9 @@ export const CUSTOMER_REQUEST_ERROR = 'CUSTOMER_REQUEST_ERROR';
 
 export const UPDATE_SHIPPING_INFO = 'UPDATE_SHIPPING_INFO';
 
+export const GET_BOUGHT_LIST_REQUEST = 'GET_BOUGHT_LIST_REQUEST';
+export const GET_BOUGHT_LIST_RESPONSE = 'GET_BOUGHT_LIST_RESPONSE';
+
 function* requestRegistation(action) {
   const { history, callBack, ...newCustomer } = action.payload;
   try {
@@ -118,12 +121,29 @@ function* watchOrdersRequest() {
   yield takeLatest(GET_ORDERS_REQUEST, getOrders);
 }
 
+function* getBoughtList() {
+  try {
+    const response = yield call(callApi, 'GET', `/api/customers/boughtList`);
+    if (response) {
+      yield put(createAction(GET_BOUGHT_LIST_RESPONSE, response));
+    } else throw new Error();
+  } catch (error) {
+    yield put(createAction(CUSTOMER_REQUEST_ERROR));
+  }
+}
+
+function* watchBoughtListRequest() {
+  yield takeLatest(GET_BOUGHT_LIST_REQUEST, getBoughtList);
+}
+
 const initCustomer = {
   customer: {},
   currentCustomer: { address: null, phoneNumber: null },
   token: null,
   orders: [],
   isWaitingOrders: false,
+  boughtList: [],
+  isWaitingBoughtList: false,
 };
 
 const customerActionHandlers = {
@@ -174,6 +194,12 @@ const customerActionHandlers = {
   },
   [CUSTOMER_REQUEST_ERROR]: state => ({ ...state, isWaitingOrders: false }),
   [UPDATE_SHIPPING_INFO]: (state, action) => ({ ...state, currentCustomer: action.payload }),
+  [GET_BOUGHT_LIST_REQUEST]: (state, action) => ({ ...state, isWaitingBoughtList: true }),
+  [GET_BOUGHT_LIST_RESPONSE]: (state, action) => ({
+    ...state,
+    boughtList: action.payload,
+    isWaitingBoughtList: false,
+  }),
 };
 
 export const customerReducer = createReducer(initCustomer, customerActionHandlers);
@@ -183,4 +209,5 @@ export const customerSagas = [
   fork(watchUpdateCustomer),
   fork(watchChangePassword),
   fork(watchOrdersRequest),
+  fork(watchBoughtListRequest),
 ];

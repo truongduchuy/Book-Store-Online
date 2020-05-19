@@ -111,6 +111,11 @@ router.post('/order', auth, async (req, res) => {
 
     await order.save();
 
+    const bookIds = order.cart.map(({ bookId }) => bookId);
+
+    req.customer.boughtList = bookIds;
+    await req.customer.save();
+
     Promise.all(order.cart.map(async item => await Book.findOne({ _id: item.bookId }))).then(
       books => {
         const total = books.reduce(
@@ -176,11 +181,23 @@ router.get('/orders', auth, async (req, res) => {
         },
       })
       .execPopulate();
-    console.log(req.customer.orders);
+
     res.send(req.customer.orders);
   } catch (e) {
     console.log(e.message);
     res.sendStatus(500);
   }
 });
+
+router.get('/boughtList', auth, async (req, res) => {
+  try {
+    const customer = await Customer.findOne({ _id: req.customer._id });
+
+    res.send({ boughtList: customer.boughtList });
+  } catch (e) {
+    console.log(e.message);
+    res.sendStatus(500);
+  }
+});
+
 module.exports = router;

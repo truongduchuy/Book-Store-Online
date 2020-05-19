@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Review = require('../models/review');
+const auth = require('../middleware/authCustomer');
 
 router.get('/:id', async (req, res) => {
   try {
@@ -24,20 +25,43 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-router.post('/', async (req, res) => {
+router.post('/', auth, async (req, res) => {
   try {
-    const { rating, reviewer, bookId } = req.body;
+    const { heading, body, rate, bookId } = req.body;
 
-    if (!rating || !reviewer || !bookId) {
+    if (!heading || !body || !rate || !bookId) {
       res.status(400).send();
     }
 
-    const newReview = new Review(req.body);
+    const newReview = new Review({
+      heading,
+      body,
+      rate,
+      bookId,
+      reviewer: req.customer._id,
+    });
 
     await newReview.save();
     await newReview.populate({ path: 'reviewer', select: 'username' }).execPopulate();
 
     res.send(newReview);
+  } catch (e) {
+    console.log(e.message);
+    res.status(500).send({ error: 'add review failed!' });
+  }
+});
+
+router.patch('/:id', auth, async (req, res) => {
+  try {
+    const { heading, body, rate } = req.body;
+
+    if (!heading || !body || !rate) {
+      res.status(400).send();
+    }
+
+    await Review.updateOne({ _id: req.params.id }, req.body);
+
+    res.send({ success: true });
   } catch (e) {
     console.log(e.message);
     res.status(500).send({ error: 'add review failed!' });
@@ -51,7 +75,7 @@ router.delete('/:id', async (req, res) => {
     res.send({ success: true });
   } catch (e) {
     console.log(e.message);
-    res.status(500).send({ error: 'get reviews failed!' });
+    res.status(500).send({ error: 'delete reviews failed!' });
   }
 });
 
