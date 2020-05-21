@@ -66,6 +66,10 @@ const Header = () => {
       url: '/dashboard/genres',
       label: 'Genres',
     },
+    {
+      url: '/dashboard/statistics',
+      label: 'Statistics',
+    },
   ];
 
   return (

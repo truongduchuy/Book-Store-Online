@@ -6,6 +6,7 @@ import { bookReducer, bookSagas } from 'components/dashboard/Books/ducks';
 import { cartReducer, cartSagas } from 'components/storefront/Cart/ducks';
 import { customerReducer, customerSagas } from 'components/storefront/Customer/ducks';
 import { orderReducer, orderSagas } from 'components/dashboard/Orders/ducks';
+import { statisticsSagas, statisticsReducer } from 'components/dashboard/Statistics/ducks';
 
 const rootReducer = combineReducers({
   genre: genreReducer,
@@ -13,10 +14,18 @@ const rootReducer = combineReducers({
   cart: cartReducer,
   customer: customerReducer,
   order: orderReducer,
+  statistics: statisticsReducer,
 });
 
 export const rootSaga = function* rootSaga() {
-  yield all([...genreSagas, ...bookSagas, ...customerSagas, ...cartSagas, ...orderSagas]);
+  yield all([
+    ...genreSagas,
+    ...bookSagas,
+    ...customerSagas,
+    ...cartSagas,
+    ...orderSagas,
+    ...statisticsSagas,
+  ]);
 };
 
 const sagaMiddleware = createSagaMiddleware();

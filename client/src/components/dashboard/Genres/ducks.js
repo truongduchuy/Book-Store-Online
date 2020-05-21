@@ -73,7 +73,7 @@ function* editGenre(action) {
 function* watchEditGenre() {
   yield takeLatest(GENRE_EDIT_REQUEST, editGenre);
 }
-const initGenre = { genres: [] };
+const initGenre = { genres: [], isWaitingGenres: false };
 const genreActionHandlers = {
   [GENRE_ADD_RESPONSE]: (state, action) => {
     const genres = [...state.genres, action.payload];

@@ -4,6 +4,7 @@ import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import Books from 'components/dashboard/Books';
 import Orders from 'components/dashboard/Orders';
 import Genres from 'components/dashboard/Genres';
+import Statistics from 'components/dashboard/Statistics';
 import DashBoardLogin from 'components/dashboard/Login';
 import Home from 'components/storefront/Home';
 import Shop from 'components/storefront/Shop';
@@ -41,6 +42,7 @@ const App = ({ dispatch }) => {
         <Route exact path="/dashboard/books" component={Books} />
         <Route exact path="/dashboard/Genres" component={Genres} />
         <Route exact path="/dashboard/Orders" component={Orders} />
+        <Route exact path="/dashboard/Statistics" component={Statistics} />
       </Switch>
     </BrowserRouter>
   );

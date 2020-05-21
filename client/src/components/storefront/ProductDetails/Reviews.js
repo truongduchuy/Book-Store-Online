@@ -187,6 +187,6 @@ const Reviews = ({ average, reviews, boughtList, bookId, dispatch, customerId })
 
 export default connect(state => ({
   reviews: state.book.bookDetails.reviews,
-  customerId: state.customer.customer._id,
+  customerId: state.customer.customer?._id,
   boughtList: state.customer.customer?.boughtList,
 }))(Reviews);

@@ -6,6 +6,8 @@ import moment from 'moment';
 import 'antd/es/date-picker/style/css';
 import lodash from 'lodash';
 
+export const { RangePicker } = DatePicker;
+
 const StyledDatePicker = styled(DatePicker)`
   width: 100%;
 `;
