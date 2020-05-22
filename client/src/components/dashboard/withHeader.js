@@ -3,8 +3,11 @@ import Header from './Header';
 
 const withHeader = Component => {
   const WithHeader = props => {
-    const employee = localStorage.getItem('bookstore-employee');
+    const employee = JSON.parse(localStorage.getItem('bookstore-employee'));
+
     if (!employee) props.history.push('/dashboard/login');
+
+    if (employee?.role !== 'ADMIN' && window.location.pathname !== '/dashboard/orders') return null;
     return (
       <>
         <Header />
