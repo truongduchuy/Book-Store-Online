@@ -22,12 +22,12 @@ app.get('/api/test', (req, res) => {
   res.send({ data: 'mock data' });
 });
 
-app.use('/api', userRouter);
 app.use('/api/genres', genreRouter);
 app.use('/api/books', bookRouter);
 app.use('/api/customers', customerRouter);
 app.use('/api/reviews', reviewRouter);
 app.use('/api/orders', orderRouter);
+app.use('/api/users', userRouter);
 
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static(path.join(__dirname, 'client', 'build')));

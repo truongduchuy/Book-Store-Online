@@ -6,6 +6,7 @@ import { bookReducer, bookSagas } from 'components/dashboard/Books/ducks';
 import { cartReducer, cartSagas } from 'components/storefront/Cart/ducks';
 import { customerReducer, customerSagas } from 'components/storefront/Customer/ducks';
 import { orderReducer, orderSagas } from 'components/dashboard/Orders/ducks';
+import { employeeReducer, employeeSagas } from 'components/dashboard/Employees/ducks';
 import { statisticsSagas, statisticsReducer } from 'components/dashboard/Statistics/ducks';
 
 const rootReducer = combineReducers({
@@ -15,6 +16,7 @@ const rootReducer = combineReducers({
   customer: customerReducer,
   order: orderReducer,
   statistics: statisticsReducer,
+  employee: employeeReducer,
 });
 
 export const rootSaga = function* rootSaga() {
@@ -25,6 +27,7 @@ export const rootSaga = function* rootSaga() {
     ...cartSagas,
     ...orderSagas,
     ...statisticsSagas,
+    ...employeeSagas,
   ]);
 };
 

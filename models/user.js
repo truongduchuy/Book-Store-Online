@@ -25,9 +25,13 @@ const userSchema = new Schema(
         }
       },
     },
-    username: {
+    name: {
       type: String,
       required: true,
+    },
+    role: {
+      type: String,
+      default: 'EMPLOYEE',
     },
   },
   { versionKey: false },

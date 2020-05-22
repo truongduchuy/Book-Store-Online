@@ -68,10 +68,6 @@ const columns = [
     dataIndex: 'price',
   },
   {
-    title: 'Description',
-    dataIndex: 'description',
-  },
-  {
     title: 'Genre',
     dataIndex: 'genreName',
   },

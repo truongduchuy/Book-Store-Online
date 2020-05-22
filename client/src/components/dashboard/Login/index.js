@@ -1,49 +1,117 @@
-import React, { useState, useEffect } from 'react';
-import { USER_ADD_REQUEST, PREFERENCE_REQUEST } from 'ducks';
-import { connect } from 'react-redux';
-import { createAction } from 'dorothy/utils/redux';
+import React from 'react';
+import { useDispatch } from 'react-redux';
+import { object, string } from 'yup';
+import styled from 'styled-components';
+import { Formik, Form } from 'formik';
+import Field from 'antd-components/field';
+import Input from 'antd-components/input';
+import Button from 'antd-components/button';
+import { LOGIN_DASHBOARD_REQUEST } from '../Employees/ducks';
+import Notification from 'antd-components/notification';
 
-const Login = ({ dispatch, users }) => {
-  useEffect(() => {
-    dispatch(createAction(PREFERENCE_REQUEST));
-  }, [dispatch]);
+const Container = styled.div`
+  background-color: #eee;
+  width: 100vw;
+  height: 100vh;
+  position: relative;
+`;
 
-  const [user, setUser] = useState({ email: '', password: '' });
-  const { email, password } = user;
+export const StyledForm = styled.div`
+  display: flex;
+  justify-content: center;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 
-  const handleChange = (key, value) => {
-    setUser({ ...user, [key]: value });
+  > div {
+    width: 350px;
+    padding: 30px 20px 40px 20px;
+    background: white;
+
+    .form {
+      > *:not(:last-child) {
+        margin-bottom: 15px;
+      }
+
+      h2 {
+        text-align: center;
+      }
+
+      > div:last-child {
+        display: flex;
+        justify-content: space-between;
+
+        button {
+          text-transform: uppercase;
+          font-weight: 500;
+        }
+      }
+    }
+
+    @media screen and (max-width: 480px) {
+      width: calc(100% - 30px);
+      max-width: calc(100% - 30px);
+    }
+  }
+`;
+
+const validationSchema = object().shape({
+  email: string().required().email('Email is invalid'),
+  password: string().required().min(6),
+});
+
+const Login = ({ history }) => {
+  const dispatch = useDispatch();
+  const initialValues = {
+    email: '',
+    password: '',
   };
 
-  const handleSubmit = e => {
-    e.preventDefault();
-    dispatch(createAction(USER_ADD_REQUEST, user));
+  const renderForm = ({ handleSubmit, ...form }) => (
+    <Form className="form">
+      <h2>Please Login</h2>
+      <Field form={form} name="email" label="Email" component={Input} />
+      <Field form={form} name="password" label="Password" type="password" component={Input} />
+      <div>
+        <Button htmlType="submit" type="primary" block onClick={handleSubmit}>
+          Login
+        </Button>
+      </div>
+    </Form>
+  );
+
+  const onLogin = values => {
+    console.log(values);
+    dispatch({
+      type: LOGIN_DASHBOARD_REQUEST,
+      payload: {
+        ...values,
+        history,
+        callBack: success => {
+          if (success) Notification.success('Logined successfully!');
+          else Notification.error('Email or password is incorrect!');
+        },
+      },
+    });
   };
 
   return (
-    <div>
-      <h2>Test form</h2>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          placeholder="email"
-          value={email}
-          onChange={event => handleChange('email', event.target.value)}
-        />
-        <input
-          type="password"
-          placeholder="password"
-          value={password}
-          onChange={event => handleChange('password', event.target.value)}
-        />
-        <button type="submit">save</button>
-        {users && <div>added {users.email}</div>}
-      </form>
-    </div>
+    <Container>
+      <StyledForm>
+        <div>
+          <Formik
+            validateOnChange={false}
+            validateOnBlur={false}
+            initialValues={initialValues}
+            validationSchema={validationSchema}
+            onSubmit={onLogin}
+            component={renderForm}
+          />
+        </div>
+      </StyledForm>
+    </Container>
   );
 };
 
-export default connect(state => ({
-  users: state.preference.users,
-  preference: state.preference.preference,
-}))(Login);
+export default Login;

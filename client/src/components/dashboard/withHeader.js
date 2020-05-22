@@ -3,6 +3,8 @@ import Header from './Header';
 
 const withHeader = Component => {
   const WithHeader = props => {
+    const employee = localStorage.getItem('bookstore-employee');
+    if (!employee) props.history.push('/dashboard/login');
     return (
       <>
         <Header />

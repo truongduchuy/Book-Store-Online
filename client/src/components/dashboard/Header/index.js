@@ -1,7 +1,11 @@
 import React from 'react';
-// import { connect } from 'react-redux';
+import { connect } from 'react-redux';
+import { Icon } from 'antd';
 import styled from 'styled-components';
+import { useHistory } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 import { NavLink } from 'react-router-dom';
+import { UPDATE_EMPLOYEE } from '../Employees/ducks';
 
 import Button from 'antd-components/button';
 
@@ -48,29 +52,60 @@ const HeaderContainer = styled.header`
     .right-box {
       display: flex;
       align-items: center;
+
+      .user-box {
+        align-items: center;
+        display: flex;
+        margin-right: 20px;
+
+        > i {
+          font-size: 20px;
+          margin-right: 10px;
+        }
+      }
     }
   }
 `;
 
-const Header = () => {
-  const links = [
-    {
-      url: '/dashboard/orders',
-      label: 'Orders',
-    },
-    {
-      url: '/dashboard/books',
-      label: 'Books',
-    },
-    {
-      url: '/dashboard/genres',
-      label: 'Genres',
-    },
-    {
-      url: '/dashboard/statistics',
-      label: 'Statistics',
-    },
-  ];
+const Header = ({ role, name }) => {
+  const history = useHistory();
+  const dispatch = useDispatch();
+
+  const handleLogout = () => {
+    history.push('/dashboard/login');
+    dispatch({ type: UPDATE_EMPLOYEE, payload: null });
+  };
+
+  const links =
+    role !== 'ADMIN'
+      ? [
+          {
+            url: '/dashboard/orders',
+            label: 'Orders',
+          },
+        ]
+      : [
+          {
+            url: '/dashboard/orders',
+            label: 'Orders',
+          },
+          {
+            url: '/dashboard/books',
+            label: 'Books',
+          },
+          {
+            url: '/dashboard/genres',
+            label: 'Genres',
+          },
+          {
+            url: '/dashboard/employees',
+            label: 'Employees',
+          },
+          {
+            url: '/dashboard/statistics',
+            label: 'Statistics',
+          },
+        ];
 
   return (
     <HeaderContainer>
@@ -88,11 +123,18 @@ const Header = () => {
           ))}
         </div>
         <div className="right-box">
-          <Button onClick={() => console.log('logout')}>Logout</Button>
+          <div className="user-box">
+            <Icon type="user" />
+            <span>{name}</span>
+          </div>
+          <Button onClick={handleLogout}>Logout</Button>
         </div>
       </div>
     </HeaderContainer>
   );
 };
 
-export default Header;
+export default connect(({ employee }) => ({
+  role: employee.employee?.role,
+  name: employee.employee?.name,
+}))(Header);

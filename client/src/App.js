@@ -4,6 +4,7 @@ import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import Books from 'components/dashboard/Books';
 import Orders from 'components/dashboard/Orders';
 import Genres from 'components/dashboard/Genres';
+import Employees from 'components/dashboard/Employees';
 import Statistics from 'components/dashboard/Statistics';
 import DashBoardLogin from 'components/dashboard/Login';
 import Home from 'components/storefront/Home';
@@ -17,6 +18,7 @@ import Checkout from './components/storefront/Checkout';
 import Customer from './components/storefront/Customer';
 import { GET_CART } from './components/storefront/Cart/ducks';
 import { GET_DATA_FROM_LOCAL } from 'components/storefront/Customer/ducks';
+import { UPDATE_EMPLOYEE } from 'components/dashboard/Employees/ducks';
 
 const App = ({ dispatch }) => {
   useEffect(() => {
@@ -25,6 +27,9 @@ const App = ({ dispatch }) => {
 
     const customerData = localStorage.getItem('customerData');
     store.dispatch({ type: GET_DATA_FROM_LOCAL, payload: JSON.parse(customerData) });
+
+    const employeeData = localStorage.getItem('bookstore-employee');
+    store.dispatch({ type: UPDATE_EMPLOYEE, payload: JSON.parse(employeeData) });
   }, [dispatch]);
   return (
     <BrowserRouter>
@@ -41,6 +46,7 @@ const App = ({ dispatch }) => {
         <Route exact path="/dashboard/login" component={DashBoardLogin} />
         <Route exact path="/dashboard/books" component={Books} />
         <Route exact path="/dashboard/Genres" component={Genres} />
+        <Route exact path="/dashboard/Employees" component={Employees} />
         <Route exact path="/dashboard/Orders" component={Orders} />
         <Route exact path="/dashboard/Statistics" component={Statistics} />
       </Switch>
