@@ -130,7 +130,7 @@ router.post('/order', auth, async (req, res) => {
             subject: 'Payment',
             cart: books.map((book, index) => ({
               title: book.title,
-              imageUrl: book.imageUrl,
+              // imageUrl: book.imageUrl,
               price: book.price,
               quantity: order.cart[index].quantity,
               subtotal: Number(book.price) * Number(order.cart[index].quantity),

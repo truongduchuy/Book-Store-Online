@@ -149,7 +149,7 @@ const ProductDetails = ({
                 {reviews?.length} {reviews?.length > 1 ? 'reviews' : 'review'}
               </span>
             </div>
-            <p>{price}$</p>
+            <p>${price}</p>
             <p>{description}</p>
             <div className="actions">
               <p>quantity:</p>

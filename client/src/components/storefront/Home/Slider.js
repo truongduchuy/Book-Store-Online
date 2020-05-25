@@ -1,13 +1,26 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { connect } from 'react-redux';
 import Swiper from 'react-id-swiper';
 import 'swiper/css/swiper.css';
 import styled from 'styled-components';
 import selfHelpImg from './self-help.jpg';
 import theStar from './theStarAndShamrock.jpg';
+import { BOOKS_REQUEST } from 'components/dashboard/Books/ducks';
+import { NavLink } from 'react-router-dom';
 
 const Container = styled.section`
   background: #f7f7f7;
   padding: 100px 70px 150px 70px;
+
+  > .heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    > h2 {
+      text-transform: uppercase;
+    }
+  }
 
   .item {
     background-color: white;
@@ -56,7 +69,7 @@ const Container = styled.section`
     left: -5px;
 
     &::after {
-      font-size: 25px;
+      font-size: 20px;
     }
   }
 
@@ -64,7 +77,7 @@ const Container = styled.section`
     right: -5px;
 
     &::after {
-      font-size: 25px;
+      font-size: 20px;
     }
   }
 
@@ -81,12 +94,18 @@ const Container = styled.section`
   }
 `;
 
-const MutipleSlidesPerView = () => {
+const pageSize = 10;
+
+const MutipleSlidesPerView = ({ dispatch, books }) => {
+  useEffect(() => {
+    dispatch({ type: BOOKS_REQUEST, payload: { page: 1, size: pageSize } });
+  }, [dispatch]);
+  console.log('books', books);
   const params = {
-    autoplay: {
-      delay: 1500,
-      disableOnInteraction: false,
-    },
+    // autoplay: {
+    //   delay: 1500,
+    //   disableOnInteraction: false,
+    // },
     navigation: {
       nextEl: '.swiper-button-next',
       prevEl: '.swiper-button-prev',
@@ -117,19 +136,29 @@ const MutipleSlidesPerView = () => {
   };
   return (
     <Container>
-      <Swiper {...params}>
-        {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((item, index) => (
-          <div key={index} className="item">
-            <a href="###">
-              <div className="image">
-                <img src={item % 2 === 0 ? theStar : selfHelpImg} alt="book" />
-              </div>
-              <p>The Star and the Shamrock</p>
-            </a>
+      {books.length === 0 ? (
+        <div>loading...</div>
+      ) : (
+        <>
+          <div className="heading" style={{ marginBottom: '20px' }}>
+            <h2>Featured Products</h2>
+            <NavLink to="/shop">View All</NavLink>
           </div>
-        ))}
-      </Swiper>
+          <Swiper {...params}>
+            {books.map(({ _id, title, imageUrl }, index) => (
+              <div key={_id} className="item">
+                <a href={`/shop/${title}`}>
+                  <div className="image">
+                    <img src={imageUrl} alt="book" />
+                  </div>
+                  <p>{title}</p>
+                </a>
+              </div>
+            ))}
+          </Swiper>
+        </>
+      )}
     </Container>
   );
 };
-export default MutipleSlidesPerView;
+export default connect(({ book }) => ({ books: book.books?.data }))(MutipleSlidesPerView);

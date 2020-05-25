@@ -12,22 +12,27 @@
         }
         .tr-heading > div, .tr-body > div {
             width: 20%;
-            padding: 5px;
         }
-
         .tr-heading > div:first-child, .tr-body > div:first-child {
-            margin-left: 10px;
+            width: 40%;
+            padding-left: 20px;
         }
         
+        .tr-body > div:first-child {
+            font-weight: 600;
+        }
+
         .thead {
             padding: 8px 5px;
             background-color: rgb(2, 172, 234);
             color: white;
         }
-
         .tbody {
             background-color: #eeeeee;
             margin-bottom: 20px;
+        }
+        .tr-body > div {
+            padding: 5px;
         }
     </style>
 </head>
@@ -103,7 +108,6 @@
             <div>
                 <div class="thead">
                     <div class="tr-heading">
-                        <div>&nbsp;</div>
                         <div>Title</div>
                         <div>Price</div>
                         <div>Quantity</div>
@@ -113,18 +117,20 @@
                  <div class="tbody">  
                     <% for (var book of cart){ %>
                         <div class="tr-body">
-                            <div>
+                            <!-- <div>
                                 <img style="max-width: 85%; width: 85%;" src="<%=book.imageUrl%>" alt="book" />
-                            </div>
-                            <div><%=book.title%> adsadasd</div>
+                            </div> -->
+                            <div><%=book.title%></div>
                             <div>$<%=book.price%></div>
                             <div><%=book.quantity%></div>
                             <div>$<%=book.subtotal%></div>
                         </div>    
                     <% } %> 
                     <div class="tr-body">
-                        <div style="width: 80% !important;">Total</div>
-                        <div style="padding-left: 20px; font-weight: 700;">$<%= total %></div>
+                        <div>Total</div>
+                        <div>&nbsp;</div>
+                        <div>&nbsp;</div>
+                        <div>$<%= total %></div>
                     </div>
                 </div>
             </div>

@@ -20,6 +20,7 @@ const StyledHeader = styled.header`
   }
 
   .header {
+    background: white;
     display: flex;
     justify-content: space-between;
     padding: 0 70px;
@@ -29,8 +30,7 @@ const StyledHeader = styled.header`
     &__logo {
       a {
         font-size: 22px;
-        color: #7b6262;
-        font-weight: lighter;
+        color: black;
         letter-spacing: 2px;
       }
 
@@ -52,7 +52,7 @@ const StyledHeader = styled.header`
           padding: 20px 0;
           display: inline-block;
           text-transform: none;
-          font-weight: 600;
+          font-weight: 400;
 
           &:hover, &.active {
             color: #1890ff;
@@ -111,7 +111,7 @@ const StyledHeader = styled.header`
           display: none;
         }
 
-        transform: translateX(100vw);
+        transform: translateY(-500px);
         transition: all .5s;
         display: flex;
         position: absolute;
@@ -123,11 +123,12 @@ const StyledHeader = styled.header`
         background-color: #97c0e8;
         color: white;
         opacity: 0;
+        z-index: -1;
 
         ${({ isNavOn }) =>
           isNavOn &&
           `
-        transform: translateX(0);
+        transform: translateY(0);
         opacity: 1;
         li a {
         color: white;
