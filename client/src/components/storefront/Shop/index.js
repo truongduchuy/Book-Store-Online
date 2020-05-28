@@ -252,7 +252,7 @@ const Shop = ({ genreStore, dispatch, bookStore }) => {
                       </div>
                       <div className="item__content">
                         <Link to={`/shop/${title}`}>{title}</Link>
-                        <p>{price}$</p>
+                        <p>${price}</p>
                       </div>
                     </div>
                   </div>

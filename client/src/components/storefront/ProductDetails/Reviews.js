@@ -12,6 +12,7 @@ import Notification from 'antd-components/notification';
 const Container = styled.div`
   width: 50%;
   padding-left: 70px;
+  margin-bottom: 50px;
 
   .content {
     padding-right: 20px;
