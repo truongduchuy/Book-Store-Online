@@ -192,7 +192,7 @@ const Cart = ({ cart, dispatch, total, isWaitingCheckout }) => {
           </>
         )}
         {cart.length === 0 && (
-          <div style={{ textAlign: 'center' }}>Your cart is currently empty.</div>
+          <div style={{ textAlign: 'center', height: '40vh' }}>Your cart is currently empty.</div>
         )}
       </StyledContent>
     </Layout>
