@@ -71,7 +71,7 @@ function* watchDeleteEmployee() {
 function* updateEmployee(action) {
   const { callBack, ...data } = action.payload;
   const { _id, ...payload } = data;
-  console.log('payload', action.payload);
+
   try {
     const response = yield call(callApi, 'PATCH', `/api/users/${_id}`, payload);
 

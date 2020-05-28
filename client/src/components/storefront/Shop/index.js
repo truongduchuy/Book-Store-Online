@@ -78,6 +78,11 @@ const StyledContent = styled.div`
 
         .item {
           border: 1px solid #eee;
+          transition: all 0.4s;
+
+          :hover {
+            box-shadow: 1px 3px 5px rgba(0, 0, 0, 0.3);
+          }
 
           &__image-box {
             position: relative;

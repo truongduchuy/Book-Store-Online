@@ -122,7 +122,6 @@ function* watchUpdateBook() {
 
 function* requestReviews(action) {
   try {
-    console.log('action.payload', action.payload);
     const { id, page, size } = action.payload;
     const query = `page=${page}&size=${size}`;
     const response = yield call(callApi, 'GET', `/api/reviews/${id}?${query}`);
@@ -171,7 +170,6 @@ function* watchBookDetailsRequest() {
 function* createReviewRequest(action) {
   try {
     const response = yield call(callApi, 'POST', `/api/reviews`, action.payload);
-    console.log('response', response);
     if (response) yield put(createAction(REVIEW_CREATE_RESPONSE, response));
   } catch (error) {
     console.log(error);
@@ -305,7 +303,6 @@ const bookActionHandlers = {
   },
   [REVIEW_UPDATE_RESPONSE]: (state, action) => {
     const { _id, heading, body, rate } = action.payload;
-    console.log('rate', rate);
     return {
       ...state,
       bookDetails: {

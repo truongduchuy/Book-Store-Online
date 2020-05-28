@@ -37,7 +37,6 @@ const OrderDetails = ({ order }) => {
     },
   ];
 
-  console.log('order', order);
   return (
     <div>
       <Descriptions title="Customer Info">

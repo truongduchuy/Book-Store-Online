@@ -38,7 +38,6 @@ const OrderDetails = ({ books }) => {
     },
   ];
 
-  console.log('books', books);
   return (
     <div>
       <Table bordered rowKey={({ _id }) => _id} dataSource={books} columns={columns} size="small" />

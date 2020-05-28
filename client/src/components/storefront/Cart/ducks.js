@@ -24,7 +24,6 @@ const setItem = (name, value) => {
 function* requestOrder(action) {
   const { history, ...data } = action.payload;
   try {
-    console.log('action.payload', action.payload);
     const response = yield call(callApi, 'POST', `/api/customers/order`, data);
     if (response && response.success) {
       history.push('/checkout/success');

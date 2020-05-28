@@ -85,7 +85,6 @@ const Cart = ({ total, isLogined, cart, dispatch, history, currentCustomer }) =>
             options={{ disableFunding: 'credit', locale: 'en-VN' }}
             onSuccess={details => {
               if (details.status === 'COMPLETED') {
-                console.log('hello');
                 dispatch({
                   type: ORDER_REQUEST,
                   payload: {

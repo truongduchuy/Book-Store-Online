@@ -3,8 +3,6 @@ import { connect } from 'react-redux';
 import Swiper from 'react-id-swiper';
 import 'swiper/css/swiper.css';
 import styled from 'styled-components';
-import selfHelpImg from './self-help.jpg';
-import theStar from './theStarAndShamrock.jpg';
 import { BOOKS_REQUEST } from 'components/dashboard/Books/ducks';
 import { NavLink } from 'react-router-dom';
 
@@ -52,6 +50,7 @@ const Container = styled.section`
 
       > p {
         color: black;
+        text-align: center;
       }
 
       .image {
@@ -100,7 +99,6 @@ const MutipleSlidesPerView = ({ dispatch, books }) => {
   useEffect(() => {
     dispatch({ type: BOOKS_REQUEST, payload: { page: 1, size: pageSize } });
   }, [dispatch]);
-  console.log('books', books);
   const params = {
     // autoplay: {
     //   delay: 1500,

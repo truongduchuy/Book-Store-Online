@@ -48,7 +48,6 @@ function* watchRegistationRequest() {
 
 function* requestLogin(action) {
   const { history, callBack, ...data } = action.payload;
-  console.log('action.payload', action.payload);
   try {
     const response = yield call(callApi, 'POST', `/api/customers/login`, data);
 

@@ -66,6 +66,7 @@ const columns = [
   {
     title: 'Price',
     dataIndex: 'price',
+    render: price => <span>${price}</span>,
   },
   {
     title: 'Genre',
