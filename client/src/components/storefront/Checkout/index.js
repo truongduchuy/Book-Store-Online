@@ -15,10 +15,11 @@ const Container = styled.div`
     left: 50%;
     position: absolute;
     transform: translate(-50%, -50%);
-    padding: 80px 100px;
+    padding: 120px 30px;
     display: flex;
     flex-direction: column;
     align-items: center;
+    text-align: center;
 
     > div:first-child {
       margin-bottom: 30px;
@@ -42,7 +43,15 @@ const Checkout = () => {
   return (
     <Container>
       <div>
-        <Progress type="circle" percent={100} width={150} />
+        <Progress
+          type="circle"
+          strokeColor={{
+            '0%': '#108ee9',
+            '100%': '#87d068',
+          }}
+          percent={100}
+          width={150}
+        />
         <h3>Payment successful!</h3>
         <div>Your payment infomation has been sent to your email</div>
         <Link to="/shop">Back to Shop</Link>
