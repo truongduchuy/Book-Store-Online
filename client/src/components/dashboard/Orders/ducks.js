@@ -49,7 +49,7 @@ const orderActionHandlers = {
     const ordersData = orders.map(order => ({
       ...order,
       orderTotal: order.cart.reduce(
-        (acc, { bookId, quantity }) => acc + Number(bookId.price) * Number(quantity),
+        (acc, { bookId, quantity }) => acc + Number(bookId?.price) * Number(quantity),
         0,
       ),
       customer: {

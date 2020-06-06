@@ -47,28 +47,29 @@ router.get('/statistics', async (req, res) => {
 
     const genres = await Genre.aggregate(aggregateArray);
 
-    const newGenres = genres.filter(genre => genre.books.length > 0);
+    const allOrders = genres[0] && genres[0].orders;
+    const newGenres = genres
+      .filter(genre => genre.books.length > 0)
+      .map(({ orders, ...resData }) => resData);
 
-    const records = newGenres.map(genre => {
-      const soldListCounter = {};
+    const orders = allOrders.filter(({ createdAt }) =>
+      dateInBetweenTwoDates(createdAt, startDate, endDate),
+    );
 
-      genre.orders
-        .filter(({ createdAt }) => dateInBetweenTwoDates(createdAt, startDate, endDate))
-        .forEach(order =>
-          order.cart.forEach(({ bookId, quantity }) => {
-            soldListCounter[bookId] = (soldListCounter[bookId] || 0) + quantity;
-          }),
-        );
-      //console.log(soldListCounter);
-      //{'5eae8d0491c77018cc8713e5': 2}
+    const carts = orders.reduce((acc, item) => [...acc, ...item.cart], []);
 
-      let record = {};
-      for (let [bookId, sold] of Object.entries(soldListCounter)) {
-        genre.books.forEach(book => {
-          if (book._id == bookId) record = { ...book, genreName: genre.name, sold };
-        });
-      }
-      return record;
+    const soldCounter = {}; // { bookId: sold}
+    carts.forEach(({ bookId, quantity: sold }) => {
+      soldCounter[bookId] = (soldCounter[bookId] || 0) + sold;
+    });
+
+    let records = [];
+    newGenres.forEach(({ name, books }) => {
+      books.forEach(book => {
+        if (soldCounter[book._id]) {
+          records.push({ ...book, genreName: name, sold: soldCounter[book._id] });
+        }
+      });
     });
 
     res.send(records.sort((a, b) => b.sold - a.sold));
