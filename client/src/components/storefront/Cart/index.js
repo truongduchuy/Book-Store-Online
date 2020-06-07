@@ -136,9 +136,11 @@ const Cart = ({ cart, dispatch, total, isWaitingCheckout }) => {
     <Layout pages={['Home', 'cart']}>
       <StyledContent>
         {isWaitingCheckout && (
-          <Loading>
-            <Spin indicator={<Icon type="loading" style={{ fontSize: 24 }} spin />} />
-          </Loading>
+          <div style={{ textAlign: 'center', height: '40vh' }}>
+            <Loading>
+              <Spin indicator={<Icon type="loading" style={{ fontSize: 24 }} spin />} />
+            </Loading>
+          </div>
         )}
         {cart.length > 0 && !isWaitingCheckout && (
           <>

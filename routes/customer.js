@@ -111,51 +111,59 @@ router.post('/order', auth, async (req, res) => {
 
     await order.save();
 
-    const bookIds = order.cart.map(({ bookId }) => bookId);
+    await order.populate('cart.bookId').execPopulate();
 
-    req.customer.boughtList = bookIds;
+    const books = order.cart.map(({ bookId }) => bookId);
+
+    // minus quantity right after bought
+    Promise.all(
+      order.cart.map(async item => {
+        const book = await Book.findOne({ _id: item.bookId });
+        book.quantity = book.quantity - item.quantity;
+        return await book.save();
+      }),
+    ).then(books => console.log('quantity updated successfully!'));
+
+    // add sold books to customer
+    req.customer.boughtList = books.map(({ _id }) => _id);
     await req.customer.save();
 
-    Promise.all(order.cart.map(async item => await Book.findOne({ _id: item.bookId }))).then(
-      books => {
-        const total = books.reduce(
-          (acc, book, index) => acc + Number(book.price) * Number(order.cart[index].quantity),
-          0,
-        );
-        emailEngine
-          .render(path.join(__dirname, '../views/mailTemplate2'), {
-            appName: 'Huy tru Store',
-            recipientName: username,
-            body: 'Thanks for your payment',
-            subject: 'Payment',
-            cart: books.map((book, index) => ({
-              title: book.title,
-              // imageUrl: book.imageUrl,
-              price: book.price,
-              quantity: order.cart[index].quantity,
-              subtotal: Number(book.price) * Number(order.cart[index].quantity),
-            })),
-            total,
-          })
-          .then(html =>
-            transporter.sendMail(
-              {
-                from: process.env.SHOP_EMAIL,
-                to: email,
-                subject: 'PAYMENT',
-                html,
-              },
-              (error, info) => {
-                if (error) {
-                  return console.log(error);
-                }
-                console.log('message sent successfully!');
-              },
-            ),
-          )
-          .catch(console.error);
-      },
+    const total = books.reduce(
+      (acc, book, index) => acc + Number(book.price) * Number(order.cart[index].quantity),
+      0,
     );
+    emailEngine
+      .render(path.join(__dirname, '../views/mailTemplate2'), {
+        appName: 'Huy tru Store',
+        recipientName: username,
+        body: 'Thanks for your payment',
+        subject: 'Payment',
+        cart: books.map((book, index) => ({
+          title: book.title,
+          // imageUrl: book.imageUrl,
+          price: book.price,
+          quantity: order.cart[index].quantity,
+          subtotal: Number(book.price) * Number(order.cart[index].quantity),
+        })),
+        total,
+      })
+      .then(html =>
+        transporter.sendMail(
+          {
+            from: process.env.SHOP_EMAIL,
+            to: email,
+            subject: 'PAYMENT',
+            html,
+          },
+          (error, info) => {
+            if (error) {
+              return console.log(error);
+            }
+            console.log('message sent successfully!');
+          },
+        ),
+      )
+      .catch(console.error);
 
     res.send({ success: true });
   } catch (e) {
@@ -192,7 +200,6 @@ router.get('/orders', auth, async (req, res) => {
 router.get('/boughtList', auth, async (req, res) => {
   try {
     const customer = await Customer.findOne({ _id: req.customer._id });
-
     res.send({ boughtList: customer.boughtList });
   } catch (e) {
     console.log(e.message);
