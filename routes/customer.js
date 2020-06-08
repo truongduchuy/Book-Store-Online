@@ -199,8 +199,7 @@ router.get('/orders', auth, async (req, res) => {
 
 router.get('/boughtList', auth, async (req, res) => {
   try {
-    const customer = await Customer.findOne({ _id: req.customer._id });
-    res.send({ boughtList: customer.boughtList });
+    res.send({ boughtList: req.customer.boughtList });
   } catch (e) {
     console.log(e.message);
     res.sendStatus(500);

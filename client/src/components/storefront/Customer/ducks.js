@@ -123,8 +123,8 @@ function* watchOrdersRequest() {
 function* getBoughtList() {
   try {
     const response = yield call(callApi, 'GET', `/api/customers/boughtList`);
-    if (response) {
-      yield put(createAction(GET_BOUGHT_LIST_RESPONSE, response));
+    if (response && response.boughtList) {
+      yield put(createAction(GET_BOUGHT_LIST_RESPONSE, response.boughtList));
     } else throw new Error();
   } catch (error) {
     yield put(createAction(CUSTOMER_REQUEST_ERROR));
@@ -196,7 +196,7 @@ const customerActionHandlers = {
   [GET_BOUGHT_LIST_REQUEST]: (state, action) => ({ ...state, isWaitingBoughtList: true }),
   [GET_BOUGHT_LIST_RESPONSE]: (state, action) => ({
     ...state,
-    boughtList: action.payload,
+    customer: { ...state.customer, boughtList: action.payload },
     isWaitingBoughtList: false,
   }),
 };
