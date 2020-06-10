@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 const Container = styled.section`
-  height: 544px;
+  height: calc(100vh - 67px);
   display: flex;
   background-color: #fff;
 
