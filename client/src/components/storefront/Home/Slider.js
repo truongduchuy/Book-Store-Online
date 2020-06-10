@@ -100,10 +100,10 @@ const MutipleSlidesPerView = ({ dispatch, books }) => {
     dispatch({ type: BOOKS_REQUEST, payload: { page: 1, size: pageSize } });
   }, [dispatch]);
   const params = {
-    // autoplay: {
-    //   delay: 1500,
-    //   disableOnInteraction: false,
-    // },
+    autoplay: {
+      delay: 2500,
+      disableOnInteraction: false,
+    },
     navigation: {
       nextEl: '.swiper-button-next',
       prevEl: '.swiper-button-prev',

@@ -270,6 +270,9 @@ const Shop = ({ genreStore, dispatch, bookStore }) => {
                     type: BOOKS_REQUEST,
                     payload: { size: pageSize, page, searchValue, genreId },
                   });
+                  document
+                    .querySelector('.heading')
+                    .scrollIntoView({ behavior: 'smooth', block: 'end' });
                 }}
               />
             )}
