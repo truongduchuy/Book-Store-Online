@@ -1,7 +1,7 @@
 # Book Store MERN
-A website made by MERN STACK.
+A website made by MERN STACK. It allows customers to buy books through Paypal account.
 # Installation
-run mongodb before you start. It allows customers to buy books through Paypal account.
+run mongodb before you start.
 ```
 npm install
 npm run dev
